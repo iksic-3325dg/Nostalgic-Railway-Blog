@@ -113,6 +113,11 @@ header {
     font-size: 40px;
 }
 
+.img {
+    width: 100%;
+    aspect-ratio: 3/2;
+}
+
 .main-contents {
     height: 100px;
     color: white;
