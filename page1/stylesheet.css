@@ -134,6 +134,10 @@ header {
     font-weight: bold;
 }
 
+.bottom-space {
+    margin-bottom: 50px;
+}
+
 .commercial-wrapper {
     padding: 40px 0 50px 0;
     text-align: center;
