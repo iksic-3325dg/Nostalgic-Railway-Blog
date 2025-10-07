@@ -113,15 +113,15 @@ header {
     font-size: 40px;
 }
 
-.img {
-    max-width: 100%;
-    height: auto;
-}
-
 .main-contents {
     height: 100px;
     color: white;
     text-align: left;
+}
+
+.main-contents img {
+    max-width: 100%;
+    height: auto;
 }
 
 .main-contents p {
