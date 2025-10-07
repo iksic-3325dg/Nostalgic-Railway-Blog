@@ -100,6 +100,7 @@ header {
     padding-left: 5%;
     padding-right: 5%;
     font-family: 'YuGothic';
+    background-color: #f7f7f7;
 }
 
 .heading {
@@ -118,7 +119,6 @@ header {
     height: auto;
     color: black;
     text-align: left;
-    background-color: #f7f7f7;
 }
 
 .main-contents img {
