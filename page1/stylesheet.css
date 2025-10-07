@@ -125,7 +125,7 @@ header {
 .main-contents img {
     max-width: 100%;
     object-fit: cover;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
 }
 
 .main-contents p {
