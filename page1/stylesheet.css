@@ -115,7 +115,7 @@ header {
 }
 
 .main-contents {
-    height: 100px;
+    height: auto;
     color: white;
     text-align: left;
 }
