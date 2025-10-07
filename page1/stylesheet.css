@@ -125,13 +125,13 @@ header {
 .main-contents img {
     max-width: 100%;
     object-fit: cover;
+    padding-bottom: 10px;
 }
 
 .main-contents p {
     font-size: 20px;
     line-height: 41px;
     font-weight: bold;
-    padding-top: 10px;
 }
 
 .commercial-wrapper {
