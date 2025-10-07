@@ -23,6 +23,7 @@ a {
     color: rgba(34,49,52,0.9);
     text-align: center;
     background-color: white;
+    border-bottom: 1px solid #eee;
 }
 
 .top-wrapper h2 {
