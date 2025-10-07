@@ -140,6 +140,7 @@ header {
 .commercial-wrapper {
     padding: 15px 0;
     text-align: center;
+    height: auto;
     border-bottom: 1px solid #eee;
 }
 
