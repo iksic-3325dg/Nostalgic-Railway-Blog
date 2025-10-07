@@ -136,6 +136,11 @@
     .main-contents img {
         padding-bottom: 15px;
     }
+
+    
+    .bottom-space {
+        margin-bottom: 30px;
+    }
     
     .commercial-wrapper {
         padding: 30px 15px 30px 15px;
