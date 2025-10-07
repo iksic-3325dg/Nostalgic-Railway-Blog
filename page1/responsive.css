@@ -78,6 +78,14 @@
         width: 100%
     }
 
+    .new {
+        margin-left: 0;
+    }
+
+    .past {
+        margin-right: 0;
+    }
+    
     header {
         height: 90px;
     }
