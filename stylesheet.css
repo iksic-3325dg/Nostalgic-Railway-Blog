@@ -94,7 +94,8 @@ header {
     margin-right: 25px;
 }
 
-.header-right a{
+.search {
+    padding: 0;
     line-height: 50px;
     padding: 0 25px;
     color: white;
