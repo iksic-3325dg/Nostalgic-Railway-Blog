@@ -103,6 +103,10 @@
         font-size: 20px;
     }
 
+    .search {
+        padding: 0;
+    }
+    
     .header-right {
         float: right;
         width: 100%;
