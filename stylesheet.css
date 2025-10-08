@@ -86,6 +86,8 @@ header {
     transition: all 0.5s;
     font-size: 25px;
     font-weight: bold;
+    opacity: 1;
+    border-radius: 0;
 }
 
 .header-search :hover {
