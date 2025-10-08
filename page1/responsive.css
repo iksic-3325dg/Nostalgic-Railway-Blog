@@ -126,6 +126,10 @@
         font-size: 20px;
     }
 
+    .main-contents {
+            padding-bottom: 0;
+    }
+    
     .main-contents p {
         font-size: 15px;
         line-height: 30px;
