@@ -55,6 +55,10 @@
         font-size: 25px;
     }
 
+    .search {
+        line-height: 60px;
+    }
+    
     .header-right a{
         line-height: 60px;
         font-size: 20px;
