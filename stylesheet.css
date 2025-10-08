@@ -78,7 +78,8 @@ header {
     margin-right: 25px;
 }
 
-.header-search a{
+.search {
+    padding: 0 10px;
     line-height: 50px;
     color: white;
     display: block;
@@ -94,8 +95,7 @@ header {
     margin-right: 25px;
 }
 
-.search {
-    padding: 0;
+.header-right a {
     line-height: 50px;
     padding: 0 25px;
     color: white;
