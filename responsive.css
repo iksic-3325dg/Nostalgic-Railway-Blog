@@ -108,8 +108,8 @@
         font-size: 20px;
     }
 
-    .search {
-        padding: 12.5px 10px;
+    .header-search a {
+        padding: 12.5px 0;
         line-height: 20px;
     }
     
