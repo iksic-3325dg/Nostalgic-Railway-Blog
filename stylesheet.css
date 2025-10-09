@@ -79,13 +79,10 @@ header {
 }
 
 .header-search a {
-    line-height: 50px;
     color: white;
-    display: block;
     transition: all 0.5s;
     font-size: 20px;
     font-weight: bold;
-    border-radius: 0;
 }
 
 .header-search :hover {
