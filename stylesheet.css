@@ -33,7 +33,6 @@ a {
     padding: 15px 50px;
     color: #ffffff;
     display: inline-block;
-    opacity: 0.9;
     border-radius: 5px;
     text-align: center;
 }
@@ -42,6 +41,7 @@ a {
     background-color: rgb(0, 195, 39);
     font-size: 20px;
     box-shadow: 0 6px #1a7940;
+    opacity: 0.9;
 }
 
 .check:hover {
