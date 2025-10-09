@@ -84,8 +84,6 @@ header {
 .header-search a {
     color: white;
     transition: all 0.5s;
-    font-size: 20px;
-    font-weight: bold;
 }
 
 .header-search :hover {
@@ -97,6 +95,8 @@ header {
     display: inline-block;
     text-align: center;
     width: 60px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .header-right {
