@@ -110,6 +110,7 @@
 
     .header-search a {
         line-height: 45px;
+        height: 45px;
     }
 
     .fa-solid {
