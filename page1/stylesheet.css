@@ -84,6 +84,10 @@ header {
 .header-search a {
     color: white;
     transition: all 0.5s;
+    line-height: 50px;
+    display: inline-block;
+    text-align: center;
+    width: 60px;
 }
 
 .header-search :hover {
