@@ -95,6 +95,9 @@ header {
 }
 
 .fa-solid {
+    line-height: 50px;
+    text-align: center;
+    width: 60px;
     font-size: 20px;
     font-weight: bold;
 }
