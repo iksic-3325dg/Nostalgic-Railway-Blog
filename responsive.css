@@ -108,6 +108,10 @@
         font-size: 20px;
     }
 
+    .header-search {
+        margin-right: 10px;
+    }
+    
     .fa-solid {
         line-height: 45px;
         font-size: 20px;
