@@ -55,7 +55,7 @@
         font-size: 25px;
     }
 
-    .search {
+    .header-search a {
         line-height: 60px;
         margin-left: 5px;
     }
