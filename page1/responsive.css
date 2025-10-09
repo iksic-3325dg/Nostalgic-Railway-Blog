@@ -104,8 +104,11 @@
         margin-right: 10px;
     }
 
-    .fa-solid {
+    .header-search a {
         line-height: 45px;
+    }
+    
+    .fa-solid {
         font-size: 20px;
     }
     
