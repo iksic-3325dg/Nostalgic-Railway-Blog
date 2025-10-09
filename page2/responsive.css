@@ -41,6 +41,11 @@
         font-size: 25px;
     }
 
+    .header-search a {
+        line-height: 60px;
+        margin-left: 5px;
+    }
+    
     .header-right a{
         line-height: 60px;
         font-size: 20px;
@@ -95,6 +100,18 @@
         font-size: 20px;
     }
 
+    .header-search {
+        margin-right: 10px;
+    }
+
+    .header-search a {
+        line-height: 45px;
+    }
+
+    .fa-solid {
+        font-size: 20px;
+    }
+    
     .header-right {
         float: right;
         width: 100%;
