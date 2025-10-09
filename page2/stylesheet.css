@@ -76,6 +76,32 @@ header {
     color: white;
 }
 
+.header-search {
+    float: right;
+    margin-right: 25px;
+}
+
+.header-search a {
+    color: white;
+    transition: all 0.5s;
+    line-height: 50px;
+    display: inline-block;
+    text-align: center;
+    width: 60px;
+}
+
+.header-search a :hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.fa-solid {
+    line-height: 50px;
+    text-align: center;
+    width: 60px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .header-right {
     float: right;
     margin-right: 25px;
