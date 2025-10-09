@@ -45,6 +45,10 @@
         line-height: 60px;
         margin-left: 5px;
     }
+
+    .fa-solid {
+        line-height: 60px;
+    }
     
     .header-right a{
         line-height: 60px;
@@ -106,10 +110,11 @@
 
     .header-search a {
         line-height: 45px;
+        height: 45px;
     }
     
     .fa-solid {
-        font-size: 20px;
+        line-height: 45px;
     }
     
     .header-right {
