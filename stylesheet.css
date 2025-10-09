@@ -78,7 +78,7 @@ header {
     margin-right: 25px;
 }
 
-.search {
+.header-search a {
     line-height: 50px;
     color: white;
     display: block;
