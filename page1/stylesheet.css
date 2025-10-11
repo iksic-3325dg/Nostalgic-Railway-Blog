@@ -153,6 +153,10 @@ header {
     padding-bottom: 30px;
 }
 
+.postdate {
+    text-align: left;
+}
+
 .main-contents p {
     font-size: 20px;
     line-height: 41px;
