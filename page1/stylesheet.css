@@ -153,6 +153,7 @@ header {
 }
 
 .tagbox {
+    font-size: 20px;
     padding: 5px;
     color: white;
     display: inline-block;
@@ -161,6 +162,7 @@ header {
     text-align: center;
     float: right;
     background-color: rgb(235, 219, 47);
+    margin-right: 5%;
 }
 
 .postdate {
