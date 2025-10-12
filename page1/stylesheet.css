@@ -152,6 +152,17 @@ header {
     object-fit: cover;
 }
 
+.tagbox {
+    padding: 10px 24px;
+    color: white;
+    display: inline-block;
+    opacity: 1;
+    border-radius: 5px;
+    text-align: center;
+    float: right;
+    background-color: rgb(235, 219, 47);
+}
+
 .postdate {
     text-align: right;
 }
