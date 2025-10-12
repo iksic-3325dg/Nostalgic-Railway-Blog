@@ -150,6 +150,10 @@
     .main-contents {
         padding-bottom: 0;
     }
+
+    .tagbox {
+        font-size: 15px;
+    }
     
     .main-contents p {
         font-size: 15px;
