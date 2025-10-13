@@ -170,11 +170,15 @@
         font-size: 15px;
         padding: 0px 10px;
     }
-    
+
+    .postdate {
+        font-size: 15px;
+    }
+
     .main-contents p {
         font-size: 15px;
         line-height: 30px;
-        padding: 0x;
+        padding: 0px;
         font-weight: bold;
     }
     
