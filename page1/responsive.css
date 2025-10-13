@@ -23,6 +23,8 @@
     img {
         object-fit: cover;
         max-width: 100%;
+        padding-left: 5%;
+        padding-right: 5%;
     }
     
     .main-contents p {
