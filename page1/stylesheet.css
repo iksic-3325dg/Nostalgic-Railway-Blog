@@ -160,7 +160,7 @@ header {
     border-radius: 5px;
     float: right;
     background-color: rgb(31, 125, 255);
-    margin-right: 8%;
+    margin-right: 6%;
 }
 
 .main-contents {
@@ -174,13 +174,8 @@ header {
     line-height: 41px;
     font-weight: bold;
     text-align: left;
-}
-
-@media(min-width:1050px) {
-    .main-contents p {
-        padding-left: 8%;
-        padding-right: 8%;
-    }
+    padding-left: 6%;
+    padding-right: 6%;
 }
 
 .postdate {
@@ -250,5 +245,5 @@ footer {
     color: white;
     position: absolute;
     bottom: 15px;
-    left: 30px;
+    left: 6%;
 }
