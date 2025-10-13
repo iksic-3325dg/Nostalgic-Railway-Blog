@@ -148,7 +148,6 @@ header {
     .main-contents img {
         height: calc(100dvh - 60px);
         object-fit: cover;
-        object-position: 50% 50%;
         text-align: center;
     }
 }
