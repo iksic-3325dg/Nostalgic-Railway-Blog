@@ -20,7 +20,7 @@
         background-color: #f7f7f7;
     }
 
-    .main-contents img {
+    img {
         object-fit: cover;
         max-width: 100%;
     }
