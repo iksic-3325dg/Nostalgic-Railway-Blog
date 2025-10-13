@@ -180,6 +180,10 @@ header {
 
 .postdate {
     text-align: right;
+    font-size: 20px;
+    line-height: 41px;
+    font-weight: bold;
+    padding-right: 6%;
 }
 
 .bottom-space {
