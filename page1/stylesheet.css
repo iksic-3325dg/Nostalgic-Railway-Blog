@@ -169,10 +169,6 @@ header {
     padding-bottom: 5px;
 }
 
-.postdate {
-    text-align: right;
-}
-
 .main-contents p {
     font-size: 20px;
     line-height: 41px;
@@ -185,6 +181,10 @@ header {
         padding-left: 8%;
         padding-right: 8%;
     }
+}
+
+.postdate {
+    text-align: right;
 }
 
 .bottom-space {
