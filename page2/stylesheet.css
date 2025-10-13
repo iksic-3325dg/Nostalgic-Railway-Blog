@@ -43,14 +43,14 @@ a {
     background-color: rgb(0, 195, 39);
     font-size: 20px;
     float: left;
-    margin-left: 25px;
+    margin-left: 8%;
 }
 
 .past {
     background-color: rgb(255, 124, 18);
     font-size: 20px;
     float: right;
-    margin-right: 25px;
+    margin-right: 8%;
 }
 
 .btn:hover {
@@ -68,7 +68,7 @@ header {
 
 .header-left {
     float: left;
-    margin-left: 25px;
+    margin-left: 3%;
     line-height: 50px;
 }
 
@@ -138,18 +138,17 @@ header {
     color: black;
 }
 
-.main-contents {
+.main-img {
     height: auto;
-    color: black;
-    text-align: left;
-    padding-left: 5%;
-    padding-right: 5%;
     padding-bottom: 5px;
+    text-align: center;
 }
 
-.main-contents img {
-    max-width: 100%;
-    object-fit: cover;
+@media(min-width:1050px) {
+    img {
+        height: calc(100dvh - 60px);
+        object-fit: cover;
+    }
 }
 
 .tagbox {
@@ -159,20 +158,36 @@ header {
     display: inline-block;
     opacity: 1;
     border-radius: 5px;
-    text-align: center;
     float: right;
     background-color: rgb(31, 125, 255);
-    margin-right: 5%;
+    margin-right: 6%;
 }
 
 .postdate {
     text-align: right;
 }
 
+.main-contents {
+    height: auto;
+    color: black;
+    padding-bottom: 5px;
+}
+
 .main-contents p {
     font-size: 20px;
     line-height: 41px;
     font-weight: bold;
+    text-align: left;
+    padding-left: 6%;
+    padding-right: 6%;
+}
+
+.postdate {
+    text-align: right;
+    font-size: 20px;
+    line-height: 41px;
+    font-weight: bold;
+    padding-right: 6%;
 }
 
 .bottom-space {
@@ -210,7 +225,7 @@ footer {
 
 .footer-right {
     float: right;
-    margin-right: 40px;
+    margin-right: 6%;
     margin-bottom: 28px;
 }
 
@@ -238,5 +253,5 @@ footer {
     color: white;
     position: absolute;
     bottom: 15px;
-    left: 30px;
+    left: 4%;
 }
