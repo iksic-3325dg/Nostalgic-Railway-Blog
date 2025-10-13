@@ -147,7 +147,7 @@ header {
     padding-bottom: 5px;
 }
 
-@media(min-width:1050px) {
+@media(min-width:1000px) {
     .main-contents img {
         height: calc(100dvh - 60px);
         object-fit: cover;
