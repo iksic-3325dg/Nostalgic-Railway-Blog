@@ -178,8 +178,8 @@ header {
 
 @media(min-width:1000px) {
     .main-contents p {
-        padding-left: 10%;
-        padding-right: 10%;
+        padding-left: 8%;
+        padding-right: 8%;
     }
 }
 
