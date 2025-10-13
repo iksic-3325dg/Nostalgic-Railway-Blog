@@ -138,9 +138,8 @@ header {
     color: black;
 }
 
-.main-contents {
+.main-img {
     height: auto;
-    color: black;
     padding-bottom: 5px;
 }
 
@@ -162,6 +161,12 @@ header {
     float: right;
     background-color: rgb(31, 125, 255);
     margin-right: 5%;
+}
+
+.main-contents {
+    height: auto;
+    color: black;
+    padding-bottom: 5px;
 }
 
 .postdate {
