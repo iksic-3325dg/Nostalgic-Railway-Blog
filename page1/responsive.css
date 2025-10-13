@@ -5,6 +5,8 @@
     
     .main-wrapper {
         font-family: 'YuGothic';
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     .heading h1 {
@@ -12,8 +14,6 @@
     }
 
     .main-contents {
-        padding-left: 5%;
-        padding-right: 5%;
         height: auto;
         color: black;
         text-align: left;
@@ -23,8 +23,6 @@
     img {
         object-fit: cover;
         max-width: 100%;
-        padding-left: 5%;
-        padding-right: 5%;
     }
     
     .main-contents p {
