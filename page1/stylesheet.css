@@ -144,7 +144,7 @@ header {
 }
 
 @media(min-width:1000px) {
-    .main-contents img {
+    img {
         height: calc(100dvh - 60px);
         object-fit: cover;
         text-align: center;
