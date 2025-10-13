@@ -148,7 +148,7 @@ header {
 }
 
 .main-contents img {
-    max-width: 100%;
+    height: 100dvh;
     object-fit: cover;
 }
 
