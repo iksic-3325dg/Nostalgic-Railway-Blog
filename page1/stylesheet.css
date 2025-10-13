@@ -147,9 +147,11 @@ header {
     padding-bottom: 5px;
 }
 
-.main-contents img {
-    height: 100dvh;
-    object-fit: cover;
+@media(min-width:1050px) {
+    .main-contents img {
+        height: calc(100dvh-60px);
+        object-fit: cover;
+    }
 }
 
 .tagbox {
