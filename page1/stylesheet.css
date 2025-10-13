@@ -141,8 +141,6 @@ header {
 .main-contents {
     height: auto;
     color: black;
-    padding-left: 5%;
-    padding-right: 5%;
     padding-bottom: 5px;
 }
 
@@ -179,8 +177,8 @@ header {
 
 @media(min-width:1000px) {
     .main-contents p {
-        padding-left: 5%;
-        padding-right: 5%;
+        padding-left: 10%;
+        padding-right: 10%;
     }
 }
 
