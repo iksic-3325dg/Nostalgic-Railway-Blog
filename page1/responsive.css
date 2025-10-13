@@ -29,8 +29,19 @@
         font-size: 20px;
         line-height: 50px;
         font-weight: bold;
+        padding-left: 0;
+        padding-right: 0;
     }
 
+    .tagbox {
+        margin-right: 0;
+    }
+    
+    .postdate {
+        padding-right: 0;
+    }
+
+    
     header {
         height: 60px;
     }
