@@ -21,7 +21,7 @@
     }
 
     .main-contents img {
-        height: 100dvh;
+        object-fit: cover;
         max-width: 100%;
     }
     
