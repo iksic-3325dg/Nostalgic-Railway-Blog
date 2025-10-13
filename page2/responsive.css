@@ -5,6 +5,8 @@
     
     .main-wrapper {
         font-family: 'YuGothic';
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     .heading h1 {
@@ -12,18 +14,31 @@
     }
 
     .main-contents {
-        padding-left: 5%;
-        padding-right: 5%;
         height: auto;
         color: black;
         text-align: left;
         background-color: #f7f7f7;
     }
 
+    img {
+        object-fit: cover;
+        max-width: 100%;
+    }
+    
     .main-contents p {
         font-size: 20px;
         line-height: 50px;
         font-weight: bold;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .tagbox {
+        margin-right: 0;
+    }
+    
+    .postdate {
+        padding-right: 0;
     }
 
     header {
@@ -31,10 +46,9 @@
     }
 
     .header-left {
-        margin-left: 25px;
         line-height: 60px;
     }
-
+    
     .header-left h3 {
         color: white;
         font-size: 25px;
@@ -154,6 +168,11 @@
     .tagbox {
         font-size: 15px;
         padding: 0px 10px;
+    }
+
+    .postdate {
+        font-size: 15px;
+        line-height: 30px;
     }
     
     .main-contents p {
