@@ -144,7 +144,7 @@ header {
     text-align: center;
 }
 
-@media(min-width:1000px) {
+@media(min-width:1050px) {
     img {
         height: calc(100dvh - 60px);
         object-fit: cover;
@@ -176,7 +176,7 @@ header {
     text-align: left;
 }
 
-@media(min-width:1000px) {
+@media(min-width:1050px) {
     .main-contents p {
         padding-left: 8%;
         padding-right: 8%;
