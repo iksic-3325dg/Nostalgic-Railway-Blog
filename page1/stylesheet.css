@@ -177,6 +177,13 @@ header {
     text-align: left;
 }
 
+@media(min-width:1000px) {
+    .main-contents p {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+}
+
 .bottom-space {
     margin-bottom: 50px;
 }
