@@ -151,6 +151,7 @@ header {
     .main-contents img {
         height: calc(100dvh-60px);
         object-fit: cover;
+        margin: 0 auto;
     }
 }
 
