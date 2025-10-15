@@ -144,6 +144,10 @@ header {
     text-align: center;
 }
 
+.sub-img {
+    display: none;
+}
+
 @media(min-width:1050px) {
     img {
         height: calc(100dvh - 60px);
