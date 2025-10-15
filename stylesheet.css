@@ -116,7 +116,8 @@ header {
 @media(min-width:1050px) {
     .main-wrapper {
         height: 800px;
-        background-image: url("1K6A4296【T：ー,4900K,M+1,濃さ2】画質8幅6016pxSQ.jpg");
+        background-image: url("1K6A4296forBlogPC.jpg");
+        /* 1K6A4296【T：ー,4900K,M+2,濃さ1,DLO85】画質7幅3000pxSQ.jpg */
         background-size: 100% auto;
         opacity: 0.8;
         padding-bottom: 80px;
