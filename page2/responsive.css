@@ -20,6 +20,14 @@
         background-color: #f7f7f7;
     }
 
+    .main-img {
+        display: none;
+    }
+
+    .sub-img {
+        display: block;
+    }
+    
     img {
         object-fit: cover;
         max-width: 100%;
