@@ -20,6 +20,10 @@
         background-color: #f7f7f7;
     }
 
+    .main-img {
+        display: none;
+    }
+    
     .sub-img {
         display: block;
     }
