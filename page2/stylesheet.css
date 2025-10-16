@@ -23,11 +23,11 @@ a {
     text-align: center;
     background-color: white;
     border-bottom: 1px solid #eee;
+    font-family: 'YuGothic';
 }
 
 .top-wrapper h2 {
     font-size: 30px;
-    letter-spacing: 5px;
 }
 
 .btn {
