@@ -1,9 +1,12 @@
-name: Build with Pagefind
+name: Build and Deploy with Pagefind
 
 on:
   push:
     branches:
-      - main
+      - main  # デフォルトブランチがmainでない場合は変更（例：master）
+
+permissions:
+  contents: write  # GITHUB_TOKENにpush権限を付与
 
 jobs:
   build:
@@ -21,9 +24,10 @@ jobs:
       - name: Install Pagefind
         run: npm install -g pagefind
 
-      - name: Build search index
+      - name: Build Pagefind index
         run: pagefind --source .
 
+      # Pagefindが生成した検索データを含めてデプロイ
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
