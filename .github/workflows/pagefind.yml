@@ -21,11 +21,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Pagefind (latest)
-        run: npm install -g pagefind@latest
-
-      - name: Build Pagefind index
-        run: pagefind --source .
+      # Pagefindをnpx経由で実行（確実に動作）
+      - name: Run pagefind command
+        run: |
+          npx -y pagefind --source .
 
       - name: List generated files
         run: ls -R _pagefind || echo "No _pagefind folder found"
