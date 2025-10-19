@@ -1,0 +1,39 @@
+name: Build and Deploy with Pagefind
+
+on:
+  push:
+    branches:
+      - main  # デフォルトブランチ名に合わせて変更（例：master）
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Pagefindをnpx経由で実行（確実に動作）
+      - name: Run pagefind command
+        run: |
+          npx -y pagefind --source .
+
+      # 生成確認（ログ用）
+      - name: List generated files
+        run: ls -R pagefind || echo "pagefind folder not found"
+
+      # GitHub Pages にデプロイ
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          force_orphan: true
