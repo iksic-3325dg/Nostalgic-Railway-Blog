@@ -21,19 +21,15 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Pagefind
-        run: npm install -g pagefind
+      - name: Install Pagefind (latest)
+        run: npm install -g pagefind@latest
 
-      # Pagefindの検索データをビルド
       - name: Build Pagefind index
-        run: |
-          pagefind --source . --output _pagefind
+        run: pagefind --source .
 
-      # Pagefind生成物を確認（デバッグ用）
       - name: List generated files
         run: ls -R _pagefind || echo "No _pagefind folder found"
 
-      # _pagefind フォルダも含めてデプロイ
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
