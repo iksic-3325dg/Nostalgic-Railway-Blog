@@ -26,6 +26,7 @@ jobs:
 
       - name: Build Pagefind index
         run: pagefind --source .
+             mv _pagefind pagefind
 
       - name: List generated files
         run: ls -R _pagefind || echo "No _pagefind folder found"
