@@ -25,7 +25,7 @@ jobs:
         run: npm install -g pagefind@latest
 
       - name: Build Pagefind index
-        run: pagefind --source . --output _pagefind
+        run: pagefind --source .
 
       - name: List generated files
         run: ls -R _pagefind || echo "No _pagefind folder found"
