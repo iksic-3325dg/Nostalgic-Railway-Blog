@@ -21,16 +21,16 @@ jobs:
         with:
           node-version: 20
 
- # Pagefindを絶対パス指定で実行
+   # Pagefind実行
       - name: Run Pagefind
         run: |
-          SOURCE_PATH="${{ github.workspace }}/Nostalgic-Railway-Blog"
-          OUTPUT_PATH="${{ github.workspace }}/Nostalgic-Railway-Blog/pagefind"
-          echo "Running Pagefind with source: $SOURCE_PATH"
-          npx -y pagefind --source "$SOURCE_PATH" --output "$OUTPUT_PATH"
+          echo "Running Pagefind from $GITHUB_WORKSPACE"
+          npx -y pagefind \
+            --source "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog" \
+            --output "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog/pagefind"
 
       - name: List generated files
-        run: ls -R ${{ github.workspace }}/Nostalgic-Railway-Blog/pagefind || echo "pagefind folder not found"
+        run: ls -R "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog/pagefind" || echo "pagefind folder not found"
 
       # GitHub Pages にデプロイ
       - name: Deploy to GitHub Pages
