@@ -27,7 +27,7 @@ jobs:
         
       # Pagefindをnpx経由で実行（確実に動作）
       - name: Run pagefind command
-        run: npx -y pagefind --source "./Nostalgic-Railway-Blog"
+        run: npx -y pagefind --source .
 
       # 生成確認（ログ用）
       - name: List generated files
