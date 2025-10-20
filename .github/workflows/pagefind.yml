@@ -21,17 +21,16 @@ jobs:
         with:
           node-version: 20
 
-      # Pagefindの出力先ディレクトリを確実に作成
-      - name: Ensure output directory exists
-        run: mkdir -p Nostalgic-Railway-Blog/pagefind
-        
-      # Pagefindをnpx経由で実行（確実に動作）
-      - name: Run pagefind command
-        run: npx -y pagefind --source .
+ # Pagefindを絶対パス指定で実行
+      - name: Run Pagefind
+        run: |
+          SOURCE_PATH="${{ github.workspace }}/Nostalgic-Railway-Blog"
+          OUTPUT_PATH="${{ github.workspace }}/Nostalgic-Railway-Blog/pagefind"
+          echo "Running Pagefind with source: $SOURCE_PATH"
+          npx -y pagefind --source "$SOURCE_PATH" --output "$OUTPUT_PATH"
 
-      # 生成確認（ログ用）
       - name: List generated files
-        run: ls -R Nostalgic-Railway-Blog/pagefind || echo "pagefind folder not found"
+        run: ls -R ${{ github.workspace }}/Nostalgic-Railway-Blog/pagefind || echo "pagefind folder not found"
 
       # GitHub Pages にデプロイ
       - name: Deploy to GitHub Pages
