@@ -23,7 +23,7 @@ jobs:
 
    # Pagefind実行
       - name: Run Pagefind
-        run: |
+        run:
           echo "Running Pagefind from $GITHUB_WORKSPACE"
           npx -y pagefind \
             --source "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog" \
