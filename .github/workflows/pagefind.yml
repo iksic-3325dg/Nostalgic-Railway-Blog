@@ -1,15 +1,12 @@
-name: Build and Deploy with Pagefind
+name: Pagefind Simple Test
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,16 +18,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install and run Pagefind
-        run:
-          echo "Running Pagefind in $(pwd)"
+      - name: Test Pagefind run
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
           npm install pagefind@latest --no-audit --no-fund
           npx pagefind --source . --output ./pagefind --verbose
-          ls -R ./pagefind || echo "pagefind folder not found"
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          force_orphan: true
+          echo "--- Pagefind output ---"
+          ls -R ./pagefind || echo "pagefind not generated"
