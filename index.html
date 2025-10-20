@@ -7,7 +7,12 @@
         <script src="https://kit.fontawesome.com/16ab2ca5ce.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="ress.css"> 
         <link rel="stylesheet" href="stylesheet.css">
-        <link rel="stylesheet" href="responsive.css">  
+        <link rel="stylesheet" href="responsive.css"> 
+		
+				<!-- Pagefind Search UI -->		
+		<link href="./pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="./pagefind/pagefind-ui.js"></script>
+		
 	</head>
 	<body>
         <header>
@@ -15,16 +20,13 @@
                 <div class="header-left">
                     <h3>Nostalgic Railway Blog</h3>
                 </div>
-				<div class="header-search">
-                    <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                </div>
 				
 				<!-- Pagefind Search UI -->
-<link href="./pagefind/pagefind-ui.css" rel="stylesheet">
-<script src="./pagefind/pagefind-ui.js"></script>
-
-<div id="search"></div>
-
+<div id="search">
+				<div class="header-search">
+                	<a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+                </div>
+</div>
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
     new PagefindUI({
