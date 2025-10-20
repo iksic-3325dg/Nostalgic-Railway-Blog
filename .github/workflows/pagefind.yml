@@ -22,7 +22,7 @@ jobs:
           node-version: 20
 
       - name: Install and run Pagefind
-        run: |
+        run:
           echo "Running Pagefind in $(pwd)"
           npm install pagefind@latest --no-audit --no-fund
           npx pagefind --source . --output ./pagefind --verbose
