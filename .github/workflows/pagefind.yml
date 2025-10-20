@@ -24,16 +24,16 @@ jobs:
       # Pagefindをnpx経由で実行（確実に動作）
       - name: Run pagefind command
         run: |
-          npx -y pagefind --source .
+          npx -y pagefind --source "./Nostalgic-Railway-Blog" --output "./Nostalgic-Railway-Blog/pagefind"
 
       # 生成確認（ログ用）
       - name: List generated files
-        run: ls -R pagefind || echo "pagefind folder not found"
+        run: ls -R ./Nostalgic-Railway-Blog/pagefind || echo "pagefind folder not found"
 
       # GitHub Pages にデプロイ
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./Nostalgic-Railway-Blog
           force_orphan: true
