@@ -1,4 +1,4 @@
-name: Build and Deploy with Pagefind (debug)
+name: Build and Deploy with Pagefind
 
 on:
   push:
@@ -21,62 +21,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Show workspace and files (pre)
+      - name: Install and run Pagefind
         run: |
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          pwd
-          ls -la
-          echo "Listing Nostalgic-Railway-Blog folder:"
-          ls -la "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog" || echo "Nostalgic-Railway-Blog not found"
-
-      - name: Node / npm / npx versions
-        run: |
-          node -v || true
-          npm -v || true
-          npx --version || echo "npx not found"
-
-      - name: Run Pagefind with verbose debug
-        run: |
-          # move into the blog directory to avoid path issues
-          cd Nostalgic-Railway-Blog || (echo "cd failed: Nostalgic-Railway-Blog missing" && exit 1)
-          echo "Now in: $(pwd)"
-          echo "Files here:"
-          ls -la
-
-          # ensure npm cache clean (avoid cached old pagefind)
-          npm cache clean --force || true
-
-          # try installing pagefind locally (safer than relying on global)
-          echo "Installing pagefind@latest locally..."
-          npm install pagefind@latest --no-audit --no-fund || (echo "npm install failed" && exit 1)
-
-          # show installed files
-          ls -la node_modules/.bin || ls -la node_modules || true
-
-          # run pagefind from local binary (guaranteed)
-          echo "Running pagefind (local binary)..."
-          ./node_modules/.bin/pagefind --source . --output ./pagefind --verbose || {
-            echo "pagefind returned non-zero exit code"; 
-            echo "Attempting fallback with npx..."
-            npx -y pagefind@latest --source . --output ./pagefind || (echo "npx fallback failed" && exit 1)
-          }
-
-          # list results
-          echo "Resulting pagefind folder:"
-          ls -la ./pagefind || echo "pagefind folder not found"
-
-      - name: Show generated files (post)
-        run: |
-          echo "Root listing:"
-          ls -la "$GITHUB_WORKSPACE"
-          echo "Blog listing:"
-          ls -la "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog"
-          echo "Pagefind listing:"
-          ls -R "$GITHUB_WORKSPACE/Nostalgic-Railway-Blog/pagefind" || echo "no pagefind dir"
+          echo "Running Pagefind in $(pwd)"
+          npm install pagefind@latest --no-audit --no-fund
+          npx pagefind --source . --output ./pagefind --verbose
+          ls -R ./pagefind || echo "pagefind folder not found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: Nostalgic-Railway-Blog
+          publish_dir: .
           force_orphan: true
