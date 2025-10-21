@@ -70,52 +70,6 @@
                 </div>
                 <div class="clear"></div>
             </div>
-        </footer>
-
-		
-<!-- 🔍 検索バー（最初は非表示） -->
-<div id="search-container" style="display:none; margin-top:10px;">
-  <input id="search" type="text" placeholder="検索..." style="padding:8px; width:200px;">
-  <div id="search-results" style="margin-top:8px;"></div>
-</div>
-<!-- Pagefindの読み込み -->
-<link href="/Nostalgic-Railway-Blog/pagefind/pagefind.css" rel="stylesheet">
-<script src="/Nostalgic-Railway-Blog/pagefind/pagefind.js"></script>
-<script>
-  window.addEventListener('DOMContentLoaded', async () => {
-    // Pagefindの初期化
-    const pagefind = await window.pagefindInit();
-    // あなたの虫眼鏡ボタンを取得
-    const searchButton = document.querySelector('.header-search a');
-    const searchContainer = document.getElementById('search-container');
-    const searchInput = document.getElementById('search');
-    const resultsContainer = document.getElementById('search-results');
-    // 🔍 虫眼鏡クリックで検索バーの表示／非表示を切り替え
-    searchButton.addEventListener('click', (event) => {
-      event.preventDefault(); // "#"リンクによるページ移動を防止
-      const isHidden = searchContainer.style.display === 'none';
-      searchContainer.style.display = isHidden ? 'block' : 'none';
-      if (isHidden) {
-        searchInput.focus();
-      } else {
-        searchContainer.style.display = 'none';
-      }
-    });
-    // ⌨️ 入力時に検索実行
-    searchInput.addEventListener('input', async (e) => {
-      const query = e.target.value.trim();
-      if (!query) {
-        resultsContainer.innerHTML = '';
-        return;
-      }
-      const results = await pagefind.search(query);
-      resultsContainer.innerHTML = results.results
-        .map(r => `<div><a href="${r.url}">${r.meta.title}</a></div>`)
-        .join('');
-    });
-  });
-</script>
-
-		
+        </footer>		
 	</body>
 </html>
