@@ -32,7 +32,7 @@ jobs:
 
       - name: Run Pagefind
         run: |
-          npx pagefind --source "./public" --output "./public/pagefind"
+          npx pagefind --source "./public" --output-path "./public/pagefind"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
