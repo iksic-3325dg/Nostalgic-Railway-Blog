@@ -2,10 +2,13 @@ name: Build and Deploy with Pagefind
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
 
 permissions:
-  contents: write   # ← これを必ず追加！
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -33,7 +36,7 @@ jobs:
         run: hugo --minify
 
       - name: Run Pagefind
-        run:  npx pagefind --source "./public"
+        run:  npx pagefind --source "./public" --output-path "./public/pagefind"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
