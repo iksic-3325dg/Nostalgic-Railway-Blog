@@ -18,6 +18,15 @@
 				<div class="header-search">
                     <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
                 </div>
+
+
+                <!-- 🔍 検索バー（最初は非表示） -->
+		        <div id="search-container" style="display:none; margin-top:10px;">
+  			        <input id="search" type="text" placeholder="検索..." style="padding:8px; width:200px;">
+			        <div id="search-results" style="margin-top:8px;"></div>
+		        </div>
+
+
                 <div class="header-right">
                     <a href="https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/">ホーム</a>
                     <a href="https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/page1/">ブログ</a>
@@ -99,6 +108,57 @@
                 <div class="clear"></div>
             </div>
         </footer>
+
+
+        <!-- Pagefind の検索スクリプト -->
+<script src="https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/pagefind/pagefind.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  // 🔍 虫眼鏡クリックで検索バーをトグル表示
+  const toggle = document.querySelector(".header-search a");
+  const searchContainer = document.getElementById("search-container");
+  const input = document.getElementById("search");
+  const resultsDiv = document.getElementById("search-results");
+
+  toggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (searchContainer.style.display === "none" || !searchContainer.style.display) {
+      searchContainer.style.display = "block";
+      input.focus();
+    } else {
+      searchContainer.style.display = "none";
+    }
+  });
+
+  // 🔍 Pagefind 読み込み
+  try {
+    const pagefind = await window.pagefind();
+    console.log("✅ Pagefind loaded");
+
+    input.addEventListener("input", async (e) => {
+      const query = e.target.value.trim();
+      resultsDiv.innerHTML = "";
+      if (!query) return;
+
+      const results = await pagefind.search(query);
+      if (results.results.length === 0) {
+        resultsDiv.innerHTML = "<p>該当する結果はありません。</p>";
+      } else {
+        for (const r of results.results) {
+          const data = await r.data();
+          const item = document.createElement("div");
+          item.innerHTML = `<a href="${data.url}" style="color:#333;text-decoration:none;">${data.meta.title}</a>`;
+          resultsDiv.appendChild(item);
+        }
+      }
+    });
+  } catch (err) {
+    console.error("❌ Pagefind 読み込みエラー:", err);
+  }
+});
+</script>
+
+
 	</body>
 </html>
 

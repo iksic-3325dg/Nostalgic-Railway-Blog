@@ -219,3 +219,16 @@ footer {
     bottom: 15px;
     left: 30px;
 }
+
+/* 🔍 Pagefind検索結果デザイン */
+#search-results a {
+  display: block;
+  padding: 4px 6px;
+  color: #333;
+  text-decoration: none;
+}
+
+#search-results a:hover {
+  background-color: #f0f0f0;
+}
+
