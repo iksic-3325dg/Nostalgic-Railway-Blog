@@ -1,0 +1,250 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN";
+    min-height: 100dvh;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.top-wrapper {
+    padding: 60px 0 10px 0;
+    color: rgba(34,49,52,0.9);
+    text-align: center;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    font-family: 'YuGothic';
+}
+
+.top-wrapper h2 {
+    font-size: 30px;
+}
+
+.btn {
+    padding: 15px 50px;
+    color: #ffffff;
+    display: inline-block;
+    opacity: 0.9;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.new {
+    background-color: rgb(0, 195, 39);
+    font-size: 20px;
+    float: left;
+    margin-left: 8%;
+}
+
+.btn:hover {
+    opacity: 1;
+}
+
+header {
+    height: 50px;
+    width: 100%;
+    background-color: rgba(34,49,52,0.9);
+    position: fixed;
+    top: 0;
+    z-index: 10;
+}
+
+.header-left {
+    float: left;
+    margin-left: 3%;
+    line-height: 50px;
+}
+
+.header-left h3 {
+    color: white;
+}
+
+.header-search {
+    float: right;
+    margin-right: 25px;
+}
+
+.header-search a {
+    color: white;
+    transition: all 0.5s;
+    line-height: 50px;
+    display: inline-block;
+    text-align: center;
+    width: 60px;
+}
+
+.header-search a:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.fa-solid {
+    line-height: 50px;
+    text-align: center;
+    width: 60px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.header-right {
+    float: right;
+    margin-right: 25px;
+}
+
+.header-right a{
+    line-height: 50px;
+    padding: 0 25px;
+    color: white;
+    display: block;
+    float: left;
+    transition: all 0.5s;
+}
+
+.header-right :hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.main-wrapper {
+    height: auto;
+    font-family: 'YuGothic';
+    background-color: #f7f7f7;
+}
+
+.heading {
+    padding: 15px 0;
+    color: white;
+    text-align: center;
+}
+
+.heading h1 {
+    font-weight: bold;
+    font-size: 40px;
+    color: black;
+}
+
+.main-img {
+    height: auto;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.sub-img {
+    display: none;
+}
+
+@media(min-width:1050px) {
+    img {
+        height: calc(100dvh - 60px);
+        object-fit: cover;
+    }
+}
+
+.tagbox {
+    font-size: 20px;
+    padding: 5px 10px;
+    color: white;
+    display: inline-block;
+    opacity: 1;
+    border-radius: 5px;
+    float: right;
+    background-color: rgb(31, 125, 255);
+    margin-right: 6%;
+}
+
+.main-contents {
+    height: auto;
+    color: black;
+    padding-bottom: 5px;
+}
+
+.main-contents p {
+    font-size: 20px;
+    line-height: 41px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 6%;
+    padding-right: 6%;
+}
+
+.postdate {
+    text-align: right;
+    font-size: 20px;
+    line-height: 41px;
+    font-weight: bold;
+    padding-right: 6%;
+}
+
+.bottom-space {
+    margin-bottom: 50px;
+}
+
+.commercial-wrapper {
+    padding: 25px 0;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+footer {
+    padding-top: 10px;
+    background-color: rgba(34,49,52,0.9);
+    position: sticky;
+    top: 100dvh;
+}
+
+.attention-wrapper h4 {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 5px;
+    color: white;
+}
+
+.attention-wrapper p {
+    font-size: 20px;
+    font-weight: normal;
+    text-align: center;
+    letter-spacing: 5px;
+    color: white;
+}
+
+.footer-right {
+    float: right;
+    margin-right: 6%;
+    margin-bottom: 28px;
+}
+
+.X {
+    padding: 10px 24px;
+    color: white;
+    display: inline-block;
+    opacity: 1;
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgb(47, 154, 235);
+}
+
+.X:hover {
+    opacity: 0.9;
+}
+
+.clear {
+    clear: both;
+}
+
+.footer-left {
+    float: left;
+    font-size: 20px;
+    color: white;
+    position: absolute;
+    bottom: 15px;
+    left: 4%;
+}
