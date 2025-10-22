@@ -148,42 +148,4 @@
             {{- end }}
         </ul>
     </nav>
-
-
-<!-- 🔍 検索ボタン -->
-<div class="header-search" style="position:relative; margin-left:auto;">
-  <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-</div>
-
-<!-- 🔍 検索バー -->
-<div id="search-container" style="display:none; position:absolute; top:60px; right:20px; z-index:999;">
-  <input type="text" id="search" placeholder="サイト内検索..." 
-         style="padding:8px; width:220px; border-radius:8px; border:1px solid #ccc;">
-  <div id="search-results"></div>
-</div>
-
-<script src="https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/pagefind/pagefind.js
-"></script>
-<script>
-document.querySelector('.header-search a').addEventListener('click', (e) => {
-  e.preventDefault();
-  const searchBox = document.getElementById('search-container');
-  searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-});
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const pagefind = await window.pagefind();
-  const input = document.getElementById("search");
-  const results = document.getElementById("search-results");
-
-  input.addEventListener("input", async (e) => {
-    const res = await pagefind.search(e.target.value);
-    results.innerHTML = res.results.map(r => `<div>${r.data.url}</div>`).join("");
-  });
-});
-</script>
-
-
-
-
 </header>
