@@ -1,0 +1,48 @@
+<script type="module">
+  // Pagefind の JS URL を “ベースURLに追随” させて安全に作る
+  const pagefindUrl = new URL('pagefind/pagefind.js', document.baseURI).href;
+
+  // DOM 取得
+  const toggle = document.querySelector('.header-search a');
+  const box    = document.getElementById('search-container');
+  const input  = document.getElementById('search');
+  const out    = document.getElementById('search-results');
+
+  // 要素がないページは何もしない（安全ガード）
+  if (toggle && box && input && out) {
+    // トグル（表示/非表示）
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      const hidden = box.hasAttribute('hidden');
+      if (hidden) input.focus();
+      box.toggleAttribute('hidden', !hidden);
+    });
+
+    try {
+      // ✅ Pagefind は default export。ESM の dynamic import で読み込み
+      const Pagefind = (await import(pagefindUrl)).default;
+      const searcher = await Pagefind();       // ←初期化
+
+      input.addEventListener('input', async (e) => {
+        const q = e.target.value.trim();
+        out.innerHTML = '';
+        if (!q) return;
+
+        const res = await searcher.search(q);
+        if (!res?.results?.length) {
+          out.innerHTML = '<p>該当する結果はありません。</p>';
+          return;
+        }
+        for (const r of res.results) {
+          const d = await r.data();
+          const item = document.createElement('div');
+          item.innerHTML = `<a href="${d.url}" style="text-decoration:none;color:#333;">${d.meta?.title ?? d.url}</a>`;
+          out.appendChild(item);
+        }
+      });
+    } catch (err) {
+      console.error('❌ Pagefind 初期化エラー:', err);
+    }
+  }
+</script>
+
