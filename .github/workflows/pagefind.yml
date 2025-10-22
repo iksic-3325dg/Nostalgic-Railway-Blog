@@ -2,8 +2,7 @@ name: Build and Deploy with Pagefind
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 permissions:
   contents: write   # ← これを必ず追加！
@@ -20,6 +19,7 @@ jobs:
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: 'latest' 
+          extended: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
