@@ -151,9 +151,9 @@
 
 
     
-        <!-- 🔍 検索ボタンと検索バー -->
+    <!-- 🔍 検索ボタンと検索バー -->
     <div class="header-search" style="position:relative; margin-left:auto; padding-left:1rem;">
-        <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i></a>
     </div>
 
     <!-- 検索バー（非表示で初期化） -->
@@ -162,21 +162,31 @@
                style="padding:8px; width:220px; border-radius:8px; border:1px solid #ccc;">
     </div>
 
-    <script src="/pagefind/pagefind.js"></script>
+    <!-- Pagefind 読み込み -->
+    <script src="/Nostalgic-Railway-Blog
+/pagefind/pagefind.js"></script>
     <script>
-        document.querySelector('.header-search a').addEventListener('click', (e) => {
-            e.preventDefault();
-            const searchBox = document.getElementById('search-container');
-            searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-        });
-
         window.addEventListener('DOMContentLoaded', async () => {
-            const pagefind = await window.pagefind();
-            const input = document.getElementById("search");
-            input.addEventListener("input", async (e) => {
-                const results = await pagefind.search(e.target.value);
-                console.log(results);
+            // 🔹 検索バーの開閉
+            const toggle = document.getElementById('search-toggle');
+            const searchBox = document.getElementById('search-container');
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
+                document.getElementById('search').focus();
             });
+
+            // 🔹 Pagefind 初期化
+            if (window.pagefind) {
+                const pagefind = await window.pagefind();
+                const input = document.getElementById("search");
+                input.addEventListener("input", async (e) => {
+                    const results = await pagefind.search(e.target.value);
+                    console.log(results); // ← まずはコンソール確認
+                });
+            } else {
+                console.error("❌ Pagefind.js が読み込まれていません。パスを確認してください。");
+            }
         });
     </script>
 
