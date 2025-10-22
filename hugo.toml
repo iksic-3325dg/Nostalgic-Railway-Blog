@@ -25,6 +25,9 @@ canonifyURLs = true
   ShowToc = true
   TocOpen = false
 
+[params.assets]
+  css = ["css/extended/custom.css"]
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
