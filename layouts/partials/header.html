@@ -151,44 +151,62 @@
 
 
     
-    <!-- 🔍 検索ボタンと検索バー -->
-    <div class="header-search" style="position:relative; margin-left:auto; padding-left:1rem;">
-        <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i></a>
-    </div>
+<!-- 🔍 検索ボタンと検索バー -->
+<div class="header-search" style="position:relative; margin-left:auto; padding-left:1rem;">
+  <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i></a>
+</div>
 
-    <!-- 検索バー（非表示で初期化） -->
-    <div id="search-container" style="display:none; position:absolute; top:60px; right:20px; z-index:999;">
-        <input type="text" id="search" placeholder="サイト内検索..."
-               style="padding:8px; width:220px; border-radius:8px; border:1px solid #ccc;">
-    </div>
+<!-- 検索バー（非表示で初期化） -->
+<div id="search-container"
+     style="display:none; position:absolute; top:60px; right:20px; z-index:999; background:#fff; padding:8px; border-radius:8px;">
+  <input type="text" id="search" placeholder="サイト内検索..."
+         style="padding:8px; width:220px; border-radius:8px; border:1px solid #ccc;">
+  <div id="search-results" style="margin-top:10px;"></div>
+</div>
 
-    <!-- Pagefind 読み込み -->
-    <script src="/Nostalgic-Railway-Blog
-/pagefind/pagefind.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', async () => {
-            // 🔹 検索バーの開閉
-            const toggle = document.getElementById('search-toggle');
-            const searchBox = document.getElementById('search-container');
-            toggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-                document.getElementById('search').focus();
-            });
+<!-- ✅ Pagefindをルート直下から読み込む -->
+<script>
+(async function() {
+  const script = document.createElement('script');
+  script.src = "/pagefind/pagefind.js";  // ← ここがポイント
+  script.onload = async () => {
+    console.log("✅ Pagefind loaded");
+    const toggle = document.getElementById('search-toggle');
+    const container = document.getElementById('search-container');
+    const input = document.getElementById('search');
+    const resultsDiv = document.getElementById('search-results');
 
-            // 🔹 Pagefind 初期化
-            if (window.pagefind) {
-                const pagefind = await window.pagefind();
-                const input = document.getElementById("search");
-                input.addEventListener("input", async (e) => {
-                    const results = await pagefind.search(e.target.value);
-                    console.log(results); // ← まずはコンソール確認
-                });
-            } else {
-                console.error("❌ Pagefind.js が読み込まれていません。パスを確認してください。");
-            }
-        });
-    </script>
+    // 🔍 虫眼鏡クリックで検索バー表示
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      container.style.display = container.style.display === 'none' ? 'block' : 'none';
+      input.focus();
+    });
+
+    // 🔍 検索処理
+    const pagefind = await window.pagefind();
+    input.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      resultsDiv.innerHTML = '';
+      if (!query) return;
+      const results = await pagefind.search(query);
+      if (results.results.length === 0) {
+        resultsDiv.innerHTML = '<p>該当する結果はありません。</p>';
+      } else {
+        for (const r of results.results) {
+          const data = await r.data();
+          const item = document.createElement('div');
+          item.innerHTML = `<a href="${data.url}" style="color:#333;text-decoration:none;">${data.meta.title}</a>`;
+          resultsDiv.appendChild(item);
+        }
+      }
+    });
+  };
+  script.onerror = () => console.error("❌ Pagefind.js を読み込めませんでした");
+  document.body.appendChild(script);
+})();
+</script>
+
 
 
 
