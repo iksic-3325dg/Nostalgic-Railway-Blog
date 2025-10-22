@@ -36,7 +36,12 @@ jobs:
         run: hugo --minify
 
       - name: Run Pagefind
-        run:  npx pagefind --source "./public" --output-path "./public/pagefind"
+        working-directory: ./public  # ✅ 追加：ここで確実にpublic内で実行
+        run: |
+          npx pagefind --source . --output-path ./pagefind
+
+      - name: Verify Pagefind output
+        run: ls -R ./public/pagefind || echo "⚠️ Pagefind not found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
