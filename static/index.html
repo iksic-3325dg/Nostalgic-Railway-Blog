@@ -83,52 +83,60 @@
 
 
 <!-- Pagefind の検索スクリプト -->
-<script type="module">
-  import { pagefind } from "https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/pagefind/pagefind.js";
+<script src="https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/pagefind/pagefind.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("🔍 Pagefind initializing...");
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🔍 Pagefind initializing...");
+  const toggle = document.querySelector(".header-search a");
+  const searchContainer = document.getElementById("search-container");
+  const input = document.getElementById("search");
+  const resultsDiv = document.getElementById("search-results");
 
-    const toggle = document.querySelector(".header-search a");
-    const searchContainer = document.getElementById("search-container");
-    const input = document.getElementById("search");
-    const resultsDiv = document.getElementById("search-results");
+  toggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    searchContainer.style.display =
+      searchContainer.style.display === "none" || !searchContainer.style.display
+        ? "block"
+        : "none";
+    if (searchContainer.style.display === "block") input.focus();
+  });
 
-    toggle.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (searchContainer.style.display === "none" || !searchContainer.style.display) {
-        searchContainer.style.display = "block";
-        input.focus();
-      } else {
-        searchContainer.style.display = "none";
-      }
+  try {
+    // ✅ 最新版Pagefindでは window.pagefind ではなく、window.Pagefindでアクセス
+    const pagefind = await new Promise((resolve, reject) => {
+      const check = setInterval(() => {
+        if (window.Pagefind) {
+          clearInterval(check);
+          resolve(window.Pagefind);
+        }
+      }, 100);
+      setTimeout(() => reject("Pagefind load timeout"), 5000);
     });
 
-    try {
-      const instance = await pagefind();
-      console.log("✅ Pagefind loaded");
+    console.log("✅ Pagefind loaded");
 
-      input.addEventListener("input", async (e) => {
-        const query = e.target.value.trim();
-        resultsDiv.innerHTML = "";
-        if (!query) return;
+    input.addEventListener("input", async (e) => {
+      const query = e.target.value.trim();
+      resultsDiv.innerHTML = "";
+      if (!query) return;
 
-        const results = await instance.search(query);
-        if (results.results.length === 0) {
-          resultsDiv.innerHTML = "<p>該当する結果はありません。</p>";
-        } else {
-          for (const r of results.results) {
-            const data = await r.data();
-            const item = document.createElement("div");
-            item.innerHTML = `<a href="${data.url}" style="color:#333;text-decoration:none;">${data.meta.title}</a>`;
-            resultsDiv.appendChild(item);
-          }
+      const results = await pagefind.search(query);
+      if (!results?.results?.length) {
+        resultsDiv.innerHTML = "<p>該当する結果はありません。</p>";
+      } else {
+        for (const r of results.results) {
+          const data = await r.data();
+          const item = document.createElement("div");
+          item.innerHTML = `<a href="${data.url}" style="color:#333;text-decoration:none;">${data.meta.title}</a>`;
+          resultsDiv.appendChild(item);
         }
-      });
-    } catch (err) {
-      console.error("❌ Pagefind 読み込みエラー:", err);
-    }
-  });
+      }
+    });
+  } catch (err) {
+    console.error("❌ Pagefind 読み込みエラー:", err);
+  }
+});
 </script>
 
 
