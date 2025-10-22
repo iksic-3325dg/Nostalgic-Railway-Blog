@@ -1,48 +1,137 @@
+<style>
+  /* 検索パネルの見た目。表示は JS で制御（layout は一切押し広げない） */
+  #pf-panel {
+    position: fixed;
+    z-index: 9999;
+    width: 320px;
+    max-width: calc(100vw - 24px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.18);
+    padding: 12px;
+    display: none;             /* ← 初期は非表示 */
+  }
+  #pf-panel input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+  }
+  #pf-results { margin-top: 10px; max-height: 60vh; overflow: auto; }
+  #pf-results a { text-decoration: none; color: #333; display: block; padding: 6px 0; }
+  #pf-results a:hover { text-decoration: underline; }
+</style>
+
 <script type="module">
-  // Pagefind の JS URL を “ベースURLに追随” させて安全に作る
-  const pagefindUrl = new URL('pagefind/pagefind.js', document.baseURI).href;
+  // ----- 設定：Pagefind のJSを自動解決（サブディレクトリでも壊れない） -----
+  const PAGEFIND_JS = new URL('pagefind/pagefind.js', document.baseURI).href;
 
-  // DOM 取得
-  const toggle = document.querySelector('.header-search a');
-  const box    = document.getElementById('search-container');
-  const input  = document.getElementById('search');
-  const out    = document.getElementById('search-results');
+  // ----- 1) パネル生成（なければ作る） -----
+  function ensurePanel(){
+    if (document.getElementById('pf-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'pf-panel';
+    panel.innerHTML = `
+      <input id="pf-input" type="text" placeholder="サイト内検索…" />
+      <div id="pf-results"></div>
+    `;
+    document.body.appendChild(panel);
+  }
 
-  // 要素がないページは何もしない（安全ガード）
-  if (toggle && box && input && out) {
-    // トグル（表示/非表示）
-    toggle.addEventListener('click', (e) => {
+  // ----- 2) パネルの表示位置をアイコン直下に合わせる（レイアウトは一切変えない） -----
+  function placePanelBelowIcon(icon, panel){
+    const r = icon.getBoundingClientRect();
+    // パネル幅を一旦表示して測る
+    panel.style.display = 'block';
+    const panelWidth = panel.offsetWidth || 320;
+    // 右端に寄せて、アイコンの真下に出す
+    panel.style.left = Math.round(r.right - panelWidth) + 'px';
+    panel.style.top  = Math.round(r.bottom + 8) + 'px';
+  }
+
+  // ----- 3) トグル（開閉）と外側クリック/ESC で閉じる -----
+  function bindToggle(engine){
+    const iconLink = document.querySelector('.header-search a'); // 既存UIを利用
+    const panel    = document.getElementById('pf-panel');
+    const input    = document.getElementById('pf-input');
+    const results  = document.getElementById('pf-results');
+    if (!iconLink || !panel || !input || !results) return;
+
+    // 既存リスナーが重複しないように一旦クリーン
+    iconLink.onclick = null;
+
+    iconLink.addEventListener('click', (e)=>{
       e.preventDefault();
-      const hidden = box.hasAttribute('hidden');
-      if (hidden) input.focus();
-      box.toggleAttribute('hidden', !hidden);
+      if (panel.style.display === 'block') {
+        panel.style.display = 'none';
+        return;
+      }
+      placePanelBelowIcon(iconLink, panel);
+      input.value = '';
+      results.innerHTML = '';
+      panel.style.display = 'block';
+      input.focus();
     });
 
-    try {
-      // ✅ Pagefind は default export。ESM の dynamic import で読み込み
-      const Pagefind = (await import(pagefindUrl)).default;
-      const searcher = await Pagefind();       // ←初期化
+    // パネル外クリックで閉じる
+    document.addEventListener('click', (e)=>{
+      if (panel.style.display !== 'block') return;
+      if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) {
+        panel.style.display = 'none';
+      }
+    });
+    // Esc で閉じる
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape' && panel.style.display === 'block') {
+        panel.style.display = 'none';
+      }
+    });
 
-      input.addEventListener('input', async (e) => {
-        const q = e.target.value.trim();
-        out.innerHTML = '';
+    // 入力 → Pagefind検索（簡易デバウンス）
+    let t;
+    input.addEventListener('input', ()=>{
+      clearTimeout(t);
+      t = setTimeout(async ()=>{
+        const q = input.value.trim();
+        results.innerHTML = '';
         if (!q) return;
 
-        const res = await searcher.search(q);
+        const res = await engine.search(q);
         if (!res?.results?.length) {
-          out.innerHTML = '<p>該当する結果はありません。</p>';
+          results.innerHTML = '<p>該当する結果はありません。</p>';
           return;
         }
         for (const r of res.results) {
           const d = await r.data();
-          const item = document.createElement('div');
-          item.innerHTML = `<a href="${d.url}" style="text-decoration:none;color:#333;">${d.meta?.title ?? d.url}</a>`;
-          out.appendChild(item);
+          const a = document.createElement('a');
+          a.href = d.url;
+          a.textContent = d.meta?.title || d.url;
+          results.appendChild(a);
         }
-      });
-    } catch (err) {
-      console.error('❌ Pagefind 初期化エラー:', err);
-    }
+      }, 160);
+    });
   }
-</script>
 
+  // ----- 4) 起動シーケンス -----
+  ensurePanel();
+
+  try {
+    // Pagefind は default export。dynamic import → 初期化
+    const Pagefind = (await import(PAGEFIND_JS)).default;
+    const engine   = await Pagefind();              // ← これが検索エンジン
+    bindToggle(engine);
+    console.log('✅ Pagefind ready');
+  } catch (err) {
+    console.error('❌ Pagefind 初期化エラー:', err);
+  }
+
+  // 画面サイズが変わった時にパネル位置を再計算（開いている時だけ）
+  window.addEventListener('resize', ()=>{
+    const panel = document.getElementById('pf-panel');
+    const icon  = document.querySelector('.header-search a');
+    if (panel && panel.style.display === 'block' && icon) {
+      placePanelBelowIcon(icon, panel);
+    }
+  });
+</script>
