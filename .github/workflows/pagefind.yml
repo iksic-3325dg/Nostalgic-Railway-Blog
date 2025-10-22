@@ -33,8 +33,7 @@ jobs:
         run: hugo --minify
 
       - name: Run Pagefind
-        run: |
-          npx pagefind --source "./public" --output-path "./public/pagefind"
+        run:  npx pagefind --source "./public"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
