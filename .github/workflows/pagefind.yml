@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write   # ← これを必ず追加！
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,8 +19,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: '0.151.2'  # あなたのローカルと同じバージョンに合わせる
-          extended: true
+          hugo-version: 'latest' 
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,4 +41,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          force_orphan: true
 
