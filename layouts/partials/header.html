@@ -150,61 +150,64 @@
     </nav>
 
 
-    
 <!-- 🔍 検索ボタンと検索バー -->
-<div class="header-search" style="position:relative; margin-left:auto; padding-left:1rem;">
+<div class="header-search" style="position: relative; margin-left: auto; padding-left: 1rem;">
   <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i></a>
 </div>
 
-<!-- 検索バー（非表示で初期化） -->
+<!-- 検索バー（初期は非表示） -->
 <div id="search-container"
-     style="display:none; position:absolute; top:60px; right:20px; z-index:999; background:#fff; padding:8px; border-radius:8px;">
-  <input type="text" id="search" placeholder="サイト内検索..."
-         style="padding:8px; width:220px; border-radius:8px; border:1px solid #ccc;">
-  <div id="search-results" style="margin-top:10px;"></div>
+     style="display:none; position:absolute; top:60px; right:20px; z-index:999; background:#fff; padding:8px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+  <input id="search" type="text" placeholder="検索..."
+         style="padding:8px; width:220px; border:1px solid #ccc; border-radius:4px;">
+  <div id="search-results" style="margin-top:8px; font-size:0.9rem;"></div>
 </div>
 
-<!-- ✅ Pagefindをルート直下から読み込む -->
+<!-- Pagefind検索スクリプト -->
+<script src="{{ "pagefind/pagefind.js" | relURL }}"></script>
 <script>
-(async function() {
-  const script = document.createElement('script');
-  script.src = "/pagefind/pagefind.js";  // ← ここがポイント
-  script.onload = async () => {
-    console.log("✅ Pagefind loaded");
-    const toggle = document.getElementById('search-toggle');
-    const container = document.getElementById('search-container');
-    const input = document.getElementById('search');
-    const resultsDiv = document.getElementById('search-results');
+  document.addEventListener("DOMContentLoaded", async () => {
+    const toggle = document.getElementById("search-toggle");
+    const container = document.getElementById("search-container");
+    const input = document.getElementById("search");
+    const results = document.getElementById("search-results");
 
-    // 🔍 虫眼鏡クリックで検索バー表示
-    toggle.addEventListener('click', (e) => {
+    // 🔍 検索バーの開閉
+    toggle.addEventListener("click", (e) => {
       e.preventDefault();
-      container.style.display = container.style.display === 'none' ? 'block' : 'none';
-      input.focus();
+      container.style.display = container.style.display === "none" ? "block" : "none";
+      if (container.style.display === "block") input.focus();
     });
 
-    // 🔍 検索処理
+    // 🔍 Pagefind初期化
+    if (!window.pagefind) {
+      console.error("Pagefindが見つかりません。gh-pagesブランチのpagefindフォルダを確認してください。");
+      return;
+    }
+
     const pagefind = await window.pagefind();
-    input.addEventListener('input', async (e) => {
+
+    // 入力で検索処理
+    input.addEventListener("input", async (e) => {
       const query = e.target.value.trim();
-      resultsDiv.innerHTML = '';
+      results.innerHTML = "";
       if (!query) return;
-      const results = await pagefind.search(query);
-      if (results.results.length === 0) {
-        resultsDiv.innerHTML = '<p>該当する結果はありません。</p>';
-      } else {
-        for (const r of results.results) {
-          const data = await r.data();
-          const item = document.createElement('div');
-          item.innerHTML = `<a href="${data.url}" style="color:#333;text-decoration:none;">${data.meta.title}</a>`;
-          resultsDiv.appendChild(item);
-        }
+
+      const searchResults = await pagefind.search(query);
+      if (searchResults.results.length === 0) {
+        results.innerHTML = "<p>該当する結果がありません。</p>";
+        return;
+      }
+
+      // 結果の描画
+      for (const r of searchResults.results.slice(0, 10)) {
+        const data = await r.data();
+        const item = document.createElement("div");
+        item.innerHTML = `<a href="${data.url}" style="display:block; margin-bottom:4px; color:#333;">${data.meta.title}</a>`;
+        results.appendChild(item);
       }
     });
-  };
-  script.onerror = () => console.error("❌ Pagefind.js を読み込めませんでした");
-  document.body.appendChild(script);
-})();
+  });
 </script>
 
 
