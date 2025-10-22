@@ -36,7 +36,7 @@ jobs:
         run: hugo --minify
 
       - name: Run Pagefind
-        run: npx pagefind --source "./public" --output "./public/pagefind"
+        run: npx pagefind --source "./public" --output-path "./public/pagefind"
 
       - name: Verify Pagefind output
         run: ls -R ./public/pagefind || echo "⚠️ Pagefind not found"
