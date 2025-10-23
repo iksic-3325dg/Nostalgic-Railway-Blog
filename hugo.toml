@@ -1,55 +1,9 @@
 baseURL = "https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/"
 languageCode = "ja"
 title = "Nostalgic Railway Blog"
-theme = "PaperMod"
-enableRobotsTXT = true
-defaultContentLanguage = "ja"
-hasCJKLanguage = true
-canonifyURLs = true
 
-[pagination]
-  pagerSize = 10
+# テーマに依存しない完全静的を優先。PaperModの指定は残っててもOKだが不要。
+theme = ""
 
-[params]
-  env = "production"
-  title = "Nostalgic Railway Blog"
-  description = "懐かしい鉄道の風景をめぐる旅"
-  keywords = ["鉄道", "旅", "ノスタルジー", "写真"]
-  author = "あなたの名前"
-  defaultTheme = "auto"
-  ShowShareButtons = true
-  ShowReadingTime = true
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = true
-  ShowCodeCopyButtons = true
-  ShowToc = true
-  TocOpen = false
-
-[params.homeInfoParams]
-  Title = "Nostalgic Railway Blog"
-  Content = """
-  懐かしい鉄道の風景をめぐる旅。写真と小さな記録を綴っていきます。
-  右上の🔍からサイト内検索できます。
-  """
-  
-[params.assets]
-  css = ["css/extended/custom.css"]
-
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
-
-[menu]
-  [[menu.main]]
-    name = "ホーム"
-    url  = "/"
-    weight = 1
-
-  [[menu.main]]
-    name = "ページ"
-    url  = "/page/"
-    weight = 2
-
-# すでにある設定はそのまま。以下を“追記”でOK
-disableKinds = ["home"]
+# 重要: 余計なURL正規化を避ける
+canonifyURLs = false

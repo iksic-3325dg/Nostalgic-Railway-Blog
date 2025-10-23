@@ -9,11 +9,69 @@
         <link rel="stylesheet" href="stylesheet.css">
         <link rel="stylesheet" href="responsive.css">
 
-        <!-- Pagefind本体（グローバル関数 window.pagefind を提供） -->
-        <script src="/Nostalgic-Railway-Blog/pagefind/pagefind.js"></script>
+        <base href="/Nostalgic-Railway-Blog/">
 
-        <!-- あなたの検索UIロジック（下で作る共通JS） -->
-        <script src="/Nostalgic-Railway-Blog/assets/js/search.js"></script>
+        <!-- Pagefind loader（グローバル版） -->
+        <script src="pagefind/pagefind.js"></script>
+
+        <!-- 検索UI（ヘッダーを崩さないフローティング） -->
+        <style>
+        #pf-panel{position:fixed;z-index:9999;width:320px;max-width:calc(100vw - 24px);
+            right:12px;top:72px;display:none;background:#fff;border-radius:12px;
+            box-shadow:0 10px 28px rgba(0,0,0,.18);padding:12px}
+        #pf-panel input{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:8px}
+        #pf-results{margin-top:10px;max-height:60vh;overflow:auto}
+        #pf-results a{display:block;padding:6px 0;color:#333;text-decoration:none}
+        #pf-results a:hover{text-decoration:underline}
+        </style>
+
+        <script>
+        // baseタグがあるのでこれでOK
+        const PF_BASE = new URL(document.baseURI).pathname;
+
+        function ensurePanel(){
+            if (document.getElementById('pf-panel')) return;
+            const p = document.createElement('div');
+            p.id = 'pf-panel';
+            p.innerHTML = '<input id="pf-input" placeholder="サイト内検索…"><div id="pf-results"></div>';
+            document.body.appendChild(p);
+        }
+        function openPanel(){ const p = document.getElementById('pf-panel'); p.style.display='block'; document.getElementById('pf-input').focus(); }
+        function closePanel(){ const p = document.getElementById('pf-panel'); p.style.display='none'; }
+
+        window.addEventListener('load', async () => {
+            if (typeof window.pagefind !== 'function') { console.error('pagefind.js 未ロード'); return; }
+            ensurePanel();
+            const engine  = await window.pagefind({ baseUrl: PF_BASE });
+
+            const trigger = document.querySelector('.header-search a') || document.querySelector('[data-search]');
+            if (trigger) {
+            trigger.addEventListener('click', (e)=>{ e.preventDefault();
+                const p = document.getElementById('pf-panel');
+                if (p.style.display==='block') { closePanel(); return; }
+                openPanel(); document.getElementById('pf-input').value=''; document.getElementById('pf-results').innerHTML='';
+            });
+            }
+
+            document.addEventListener('click', (e)=>{
+            const p = document.getElementById('pf-panel');
+            if (p.style.display!=='block') return;
+            if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search') && !e.target.closest('[data-search]')) closePanel();
+            });
+            document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closePanel(); });
+
+            let t; const input = document.getElementById('pf-input'); const list = document.getElementById('pf-results');
+            input.addEventListener('input', ()=>{
+            clearTimeout(t);
+            t=setTimeout(async ()=>{
+                const q=input.value.trim(); list.innerHTML=''; if(!q) return;
+                const res=await engine.search(q);
+                if(!res?.results?.length){ list.innerHTML='<p>該当する結果はありません。</p>'; return; }
+                for(const r of res.results){ const d=await r.data(); const a=document.createElement('a'); a.href=d.url; a.textContent=d.meta?.title||d.url; list.appendChild(a); }
+            }, 160);
+            });
+        });
+        </script>
 
 	</head>
 	<body>
