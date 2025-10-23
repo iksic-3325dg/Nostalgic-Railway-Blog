@@ -2,6 +2,9 @@
   <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
 </footer>
 
+<!-- Pagefind loader (MUST be exactly this one line) -->
+<script src="{{ "pagefind/pagefind.js" | absURL }}?v={{ now.Unix }}"></script>
+
 <style>
   /* フローティング検索パネル（ヘッダーを動かさない） */
   #pf-panel{
