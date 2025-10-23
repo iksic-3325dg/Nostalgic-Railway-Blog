@@ -1,4 +1,4 @@
-name: Build and Deploy with Pagefind
+name: Build and Deploy (static + Pagefind)
 
 on:
   push:
@@ -6,22 +6,12 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (with submodules)
-        uses: actions/checkout@v4
-        with:
-          submodules: true        # ← PaperMod を submodule で使う場合は必須
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -29,22 +19,17 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Build Hugo (static passthrough)
+        run: hugo --minify
 
       - name: Install Pagefind
-        run: npm install -g pagefind
-
-      - name: Build Hugo site
-        run: hugo --minify
+        run: npm i -g pagefind
 
       - name: Run Pagefind
         run: pagefind --site "./public" --output-path "./public/pagefind"
 
       - name: Verify Pagefind output
-        run: ls -la ./public/pagefind && head -n 50 ./public/pagefind/pagefind.js || echo "⚠️ Pagefind not found"
+        run: ls -la ./public/pagefind && grep -m1 pagefind.js ./public/pagefind/pagefind.js && echo "OK"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
