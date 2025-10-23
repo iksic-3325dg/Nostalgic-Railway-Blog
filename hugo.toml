@@ -25,6 +25,13 @@ canonifyURLs = true
   ShowToc = true
   TocOpen = false
 
+[params.homeInfoParams]
+  Title = "Nostalgic Railway Blog"
+  Content = """
+  懐かしい鉄道の風景をめぐる旅。写真と小さな記録を綴っていきます。
+  右上の🔍からサイト内検索できます。
+  """
+  
 [params.assets]
   css = ["css/extended/custom.css"]
 
@@ -32,3 +39,14 @@ canonifyURLs = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[menu]
+  [[menu.main]]
+    name = "ホーム"
+    url  = "/"
+    weight = 1
+
+  [[menu.main]]
+    name = "ページ"
+    url  = "/page/"
+    weight = 2
