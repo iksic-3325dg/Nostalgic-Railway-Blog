@@ -1,0 +1,79 @@
+<!-- Pagefind loader（1行で読み込む＋サブディレクトリ対応） -->
+<script src="{{ "pagefind/pagefind.js" | absURL }}"></script>
+
+<style>
+  #pf-panel{
+    position:fixed; z-index:9999; width:320px; max-width:calc(100vw - 24px);
+    right:12px; top:72px; background:#fff; border-radius:12px;
+    box-shadow:0 10px 28px rgba(0,0,0,.18); padding:12px; display:none;
+  }
+  #pf-panel input{ width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; outline:none; }
+  #pf-results{ margin-top:10px; max-height:60vh; overflow:auto; }
+  #pf-results a{ display:block; padding:6px 0; color:#333; text-decoration:none; }
+  #pf-results a:hover{ text-decoration:underline; }
+</style>
+
+<script>
+  const PF_BASE = new URL(document.baseURI).pathname;
+
+  function ensurePanel(){
+    if (document.getElementById('pf-panel')) return;
+    const el = document.createElement('div');
+    el.id = 'pf-panel';
+    el.innerHTML = `
+      <input id="pf-input" type="text" placeholder="サイト内検索…">
+      <div id="pf-results"></div>
+    `;
+    document.body.appendChild(el);
+  }
+  function openPanel(){ const p = document.getElementById('pf-panel'); p.style.display='block'; document.getElementById('pf-input').focus(); }
+  function closePanel(){ const p = document.getElementById('pf-panel'); p.style.display='none'; }
+
+  window.addEventListener('load', async () => {
+    // pagefind.js が読み込まれているか
+    if (typeof window.pagefind !== 'function') {
+      console.error('Pagefind 未ロード（/pagefind/pagefind.js を確認）');
+      return;
+    }
+    ensurePanel();
+    const engine  = await window.pagefind({ baseUrl: PF_BASE });
+    const trigger = document.querySelector('.header-search a'); // 右上の虫眼鏡
+    if (!trigger) return;
+
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const p = document.getElementById('pf-panel');
+      if (p.style.display === 'block') { closePanel(); return; }
+      openPanel();
+      document.getElementById('pf-input').value = '';
+      document.getElementById('pf-results').innerHTML = '';
+    });
+    document.addEventListener('click', (e)=>{
+      const p = document.getElementById('pf-panel');
+      if (p.style.display !== 'block') return;
+      if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) closePanel();
+    });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closePanel(); });
+
+    // 入力→検索（デバウンス）
+    let t;
+    const input = document.getElementById('pf-input');
+    const list  = document.getElementById('pf-results');
+    input.addEventListener('input', ()=>{
+      clearTimeout(t);
+      t = setTimeout(async ()=>{
+        const q = input.value.trim();
+        list.innerHTML = '';
+        if (!q) return;
+        const res = await engine.search(q);
+        if (!res?.results?.length){ list.innerHTML = '<p>該当する結果はありません。</p>'; return; }
+        for (const r of res.results){
+          const d = await r.data();
+          const a = document.createElement('a');
+          a.href = d.url; a.textContent = d.meta?.title || d.url;
+          list.appendChild(a);
+        }
+      }, 160);
+    });
+  });
+</script>

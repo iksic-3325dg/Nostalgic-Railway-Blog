@@ -50,3 +50,6 @@ canonifyURLs = true
     name = "ページ"
     url  = "/page/"
     weight = 2
+
+# すでにある設定はそのまま。以下を“追記”でOK
+disableKinds = ["home"]
