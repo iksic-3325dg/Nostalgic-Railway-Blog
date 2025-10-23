@@ -1,10 +1,6 @@
-{{ warnf "USING_LOCAL_FOOTER" }}
 <footer class="footer">
   <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
 </footer>
-
-<!-- ▼ Pagefind loader（必ず 1 行で読み込む） -->
-<script src="{{ "pagefind/pagefind.js" | absURL }}"></script>
 
 <style>
   /* フローティング検索パネル（ヘッダーを動かさない） */
@@ -20,10 +16,24 @@
 </style>
 
 <script>
-  // インデックスのベースURL（サブディレクトリ公開に対応）
+  // サブディレクトリでも正しく読むための base
   const PF_BASE = new URL(document.baseURI).pathname;
+  // 実際に読み込む pagefind.js の URL（base に依存）
+  const PF_SRC  = new URL('pagefind/pagefind.js', document.baseURI).href;
 
-  // パネル生成（重複作成しない）
+  // pagefind.js を動的にロード
+  function loadPagefind(){
+    return new Promise((resolve, reject) => {
+      if (typeof window.pagefind === 'function') return resolve(window.pagefind);
+      const s = document.createElement('script');
+      s.src = PF_SRC;
+      s.onload = () => resolve(window.pagefind);
+      s.onerror = (e) => reject(new Error('pagefind.js の読み込みに失敗: ' + PF_SRC));
+      document.head.appendChild(s);
+    });
+  }
+
+  // パネル生成など（あなたの ensurePanel / openPanel / closePanel はそのまま利用）
   function ensurePanel(){
     if (document.getElementById('pf-panel')) return;
     const panel = document.createElement('div');
@@ -34,76 +44,72 @@
     `;
     document.body.appendChild(panel);
   }
+  function openPanel(){ const p=document.getElementById('pf-panel'); p.style.display='block'; document.getElementById('pf-input').focus(); }
+  function closePanel(){ const p=document.getElementById('pf-panel'); p.style.display='none'; }
 
-  // パネルの表示位置は固定（ヘッダーを崩さない）
-  function openPanel(){
-    const p = document.getElementById('pf-panel');
-    p.style.display = 'block';
-    document.getElementById('pf-input').focus();
-  }
-  function closePanel(){
-    const p = document.getElementById('pf-panel');
-    p.style.display = 'none';
-  }
-
-  // 起動
   window.addEventListener('load', async () => {
-    console.log('🔎 injecting pagefind…');
+    try {
+      // 1) 動的ロード
+      const pagefindFn = await loadPagefind();
+      if (typeof pagefindFn !== 'function') {
+        console.error('❌ pagefind.js 取得済みだが window.pagefind が関数ではありません');
+        return;
+      }
 
-    // loader が本当に入ったかチェック
-    if (typeof window.pagefind !== 'function') {
-      console.error('❌ pagefind.js が読み込めていません（HTML に <script src="/…/pagefind/pagefind.js"> が無い）');
-      return;
+      // 2) UI 準備
+      ensurePanel();
+      const engine = await pagefindFn({ baseUrl: PF_BASE });
+
+      // 3) 虫眼鏡トグル
+      const trigger = document.querySelector('.header-search a');
+      if (!trigger) { console.warn('⚠️ .header-search a が見つかりません'); return; }
+
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const panel = document.getElementById('pf-panel');
+        if (panel.style.display === 'block') { closePanel(); return; }
+        openPanel();
+        document.getElementById('pf-input').value = '';
+        document.getElementById('pf-results').innerHTML = '';
+      });
+
+      // 4) 外側クリック/ESCで閉じる
+      document.addEventListener('click', (e)=>{
+        const p = document.getElementById('pf-panel');
+        if (p.style.display !== 'block') return;
+        if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) closePanel();
+      });
+      document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closePanel(); });
+
+      // 5) 入力→検索（デバウンス）
+      let t;
+      const input = document.getElementById('pf-input');
+      const list  = document.getElementById('pf-results');
+      input.addEventListener('input', ()=>{
+        clearTimeout(t);
+        t = setTimeout(async ()=>{
+          const q = input.value.trim();
+          list.innerHTML = '';
+          if (!q) return;
+
+          const res = await engine.search(q);
+          if (!res?.results?.length){
+            list.innerHTML = '<p>該当する結果はありません。</p>';
+            return;
+          }
+          for (const r of res.results){
+            const d = await r.data();
+            const a = document.createElement('a');
+            a.href = d.url;
+            a.textContent = d.meta?.title || d.url;
+            list.appendChild(a);
+          }
+        }, 160);
+      });
+
+      console.log('✅ Pagefind ready (dynamic)');
+    } catch (e) {
+      console.error(e);
     }
-
-    ensurePanel();
-
-    // Pagefind エンジン作成
-    const engine = await window.pagefind({ baseUrl: PF_BASE });
-
-    // 既存の虫眼鏡アイコンに紐付け（PaperMod の .header-search a）
-    const trigger = document.querySelector('.header-search a');
-    if (!trigger) { console.warn('⚠️ .header-search a が見つかりません'); return; }
-
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault();
-      const p = document.getElementById('pf-panel');
-      if (p.style.display === 'block') { closePanel(); return; }
-      openPanel();
-      document.getElementById('pf-input').value = '';
-      document.getElementById('pf-results').innerHTML = '';
-    });
-
-    // 外側クリック / Esc で閉じる
-    document.addEventListener('click', (e)=>{
-      const p = document.getElementById('pf-panel');
-      if (p.style.display !== 'block') return;
-      if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) closePanel();
-    });
-    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closePanel(); });
-
-    // 入力 → 検索
-    let t; 
-    const input  = document.getElementById('pf-input');
-    const list   = document.getElementById('pf-results');
-    input.addEventListener('input', ()=>{
-      clearTimeout(t);
-      t = setTimeout(async ()=>{
-        const q = input.value.trim();
-        list.innerHTML = '';
-        if (!q) return;
-
-        const res = await engine.search(q);
-        if (!res?.results?.length){ list.innerHTML = '<p>該当する結果はありません。</p>'; return; }
-        for (const r of res.results){
-          const d = await r.data();
-          const a = document.createElement('a');
-          a.href = d.url; a.textContent = d.meta?.title || d.url;
-          list.appendChild(a);
-        }
-      }, 160);
-    });
-
-    console.log('✅ Pagefind ready');
   });
 </script>
