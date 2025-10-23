@@ -258,7 +258,6 @@
 </style>
 
 <script type="module">
-  // Pagefind の JS をベースURL相対で解決（/Nostalgic-Railway-Blog/ でも壊れない）
   const PAGEFIND_JS = new URL('pagefind/pagefind.js', document.baseURI).href;
 
   function ensurePanel(){
@@ -281,8 +280,7 @@
   }
 
   async function boot(){
-    // 既存の虫眼鏡ボタン（あなたのHTMLに合わせてある）
-    const icon = document.querySelector('.header-search a');
+    const icon = document.querySelector('.header-search a'); // 既存の虫眼鏡
     if (!icon) { console.warn('no .header-search a'); return; }
 
     ensurePanel();
@@ -290,11 +288,9 @@
     const input  = document.getElementById('pf-input');
     const list   = document.getElementById('pf-results');
 
-    // Pagefind 初期化（default export）
-    const Pagefind = (await import(PAGEFIND_JS)).default;
+    const Pagefind = (await import(PAGEFIND_JS)).default; // default export
     const engine   = await Pagefind();
 
-    // トグル
     icon.addEventListener('click', (e)=>{
       e.preventDefault();
       if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
@@ -303,7 +299,6 @@
       input.focus();
     });
 
-    // 外側クリック & Esc で閉じる
     document.addEventListener('click', (e)=>{
       if (panel.style.display !== 'block') return;
       if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) {
@@ -314,7 +309,6 @@
       if (e.key === 'Escape' && panel.style.display === 'block') panel.style.display = 'none';
     });
 
-    // 入力で検索（簡易デバウンス）
     let t;
     input.addEventListener('input', ()=>{
       clearTimeout(t);
