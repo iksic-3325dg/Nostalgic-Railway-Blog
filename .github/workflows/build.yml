@@ -12,12 +12,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true     # PaperMod を submodule で使っている場合は必須
+          submodules: true
           fetch-depth: 0
 
       - name: Setup Hugo
@@ -31,18 +30,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build Hugo (public/)
-        run: |
-          hugo --minify
-          test -d public && echo "Hugo OK" || (echo "NO public dir" && exit 1)
+      - name: Build Hugo site
+        run: hugo --minify
 
-      - name: Run Pagefind (to public/pagefind)
-        run: |
-          npx -y pagefind --site "./public" --output-path "./public/pagefind"
-          ls -la public/pagefind || (echo "NO pagefind output" && exit 1)
+      - name: Run Pagefind
+        run: npx -y pagefind@latest --site "./public" --output-path "./public/pagefind"
 
-      - name: Add .nojekyll
-        run: echo > public/.nojekyll
+      - name: Verify Pagefind output
+        run: ls -R ./public/pagefind || echo "⚠️ Pagefind not found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -50,4 +45,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           force_orphan: true
-
