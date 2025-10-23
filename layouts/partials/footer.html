@@ -1,131 +1,16 @@
-{{- if not (.Param "hideFooter") }}
 <footer class="footer">
-  {{- if not site.Params.footer.hideCopyright }}
-    {{- if site.Copyright }}
-      <span>{{ site.Copyright | markdownify }}</span>
-    {{- else }}
-      <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
-    {{- end }}
-    {{- print " · "}}
-  {{- end }}
-
-  {{- with site.Params.footer.text }}
-    {{ . | markdownify }}
-    {{- print " · "}}
-  {{- end }}
-
-  <span>
-    Powered by
-    <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-    <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
-  </span>
+  <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
 </footer>
-{{- end }}
 
-{{- if (not site.Params.disableScrollToTop) }}
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-    <path d="M12 6H0l6-6z" />
-  </svg>
-</a>
-{{- end }}
-
-<!-- ===== Theme / anchor helpers (PaperMod 標準) ===== -->
-<script>
-  let menu = document.getElementById('menu');
-  if (menu) {
-    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-    menu.onscroll = function () {
-      localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-    }
-  }
-
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      var id = this.getAttribute("href").substr(1);
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({ behavior: "smooth" });
-      } else {
-        document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-      }
-      if (id === "top") { history.replaceState(null, null, " "); }
-      else { history.pushState(null, null, `#${id}`); }
-    });
-  });
-</script>
-
-{{- if (not site.Params.disableScrollToTop) }}
-<script>
-  var mybutton = document.getElementById("top-link");
-  window.onscroll = function () {
-    if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-      mybutton.style.visibility = "visible"; mybutton.style.opacity = "1";
-    } else {
-      mybutton.style.visibility = "hidden"; mybutton.style.opacity = "0";
-    }
-  };
-</script>
-{{- end }}
-
-{{- if (not site.Params.disableThemeToggle) }}
-<script>
-  document.getElementById("theme-toggle").addEventListener("click", () => {
-    if (document.body.className.includes("dark")) {
-      document.body.classList.remove('dark'); localStorage.setItem("pref-theme", 'light');
-    } else {
-      document.body.classList.add('dark'); localStorage.setItem("pref-theme", 'dark');
-    }
-  });
-</script>
-{{- end }}
-
-{{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
-<script>
-  document.querySelectorAll('pre > code').forEach((codeblock) => {
-    const container = codeblock.parentNode.parentNode;
-    const copybutton = document.createElement('button');
-    copybutton.classList.add('copy-code');
-    copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}';
-
-    function copyingDone() {
-      copybutton.innerHTML = '{{- i18n "code_copied" | default "copied!" }}';
-      setTimeout(() => { copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}'; }, 2000);
-    }
-
-    copybutton.addEventListener('click', () => {
-      if ('clipboard' in navigator) {
-        navigator.clipboard.writeText(codeblock.textContent); copyingDone(); return;
-      }
-      const range = document.createRange(); range.selectNodeContents(codeblock);
-      const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
-      try { document.execCommand('copy'); copyingDone(); } catch (e) {}
-      selection.removeRange(range);
-    });
-
-    if (container.classList.contains("highlight")) {
-      container.appendChild(copybutton);
-    } else if (container.parentNode.firstChild == container) {
-      // LineNos cell
-    } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-      codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-    } else {
-      codeblock.parentNode.appendChild(copybutton);
-    }
-  });
-</script>
-{{- end }}
-
-<!-- ===== Pagefind（グローバルAPI版）ここから ===== -->
-<!-- JS 本体。absURL により /Nostalgic-Railway-Blog/ 配下でも正しいURLになります -->
+<!-- ▼ Pagefind loader（必ず 1 行で読み込む） -->
 <script src="{{ "pagefind/pagefind.js" | absURL }}"></script>
 
 <style>
-  /* 固定表示の検索パネル（ヘッダーのレイアウトを動かさない） */
+  /* フローティング検索パネル（ヘッダーを動かさない） */
   #pf-panel{
     position:fixed; z-index:9999; width:320px; max-width:calc(100vw - 24px);
-    background:#fff; border-radius:12px; box-shadow:0 10px 28px rgba(0,0,0,.18);
-    padding:12px; display:none;
+    right:12px; top:72px; display:none; background:#fff; border-radius:12px;
+    box-shadow:0 10px 28px rgba(0,0,0,.18); padding:12px;
   }
   #pf-panel input{ width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; outline:none; }
   #pf-results{ margin-top:10px; max-height:60vh; overflow:auto; }
@@ -134,9 +19,10 @@
 </style>
 
 <script>
-  // サイトのベース（例: /Nostalgic-Railway-Blog/）を自動で渡す
+  // インデックスのベースURL（サブディレクトリ公開に対応）
   const PF_BASE = new URL(document.baseURI).pathname;
 
+  // パネル生成（重複作成しない）
   function ensurePanel(){
     if (document.getElementById('pf-panel')) return;
     const panel = document.createElement('div');
@@ -148,55 +34,57 @@
     document.body.appendChild(panel);
   }
 
-  function placePanelBelowIcon(icon, panel){
-    const r = icon.getBoundingClientRect();
-    panel.style.display = 'block';
-    const w = panel.offsetWidth || 320;
-    panel.style.left = (r.right - w) + 'px';
-    panel.style.top  = (r.bottom + 8) + 'px';
+  // パネルの表示位置は固定（ヘッダーを崩さない）
+  function openPanel(){
+    const p = document.getElementById('pf-panel');
+    p.style.display = 'block';
+    document.getElementById('pf-input').focus();
+  }
+  function closePanel(){
+    const p = document.getElementById('pf-panel');
+    p.style.display = 'none';
   }
 
+  // 起動
   window.addEventListener('load', async () => {
-    // pagefind.js（グローバル版）が読めているか
+    console.log('🔎 injecting pagefind…');
+
+    // loader が本当に入ったかチェック
     if (typeof window.pagefind !== 'function') {
-      console.error('Pagefind が読み込めていません。/pagefind/pagefind.js を確認してください。');
+      console.error('❌ pagefind.js が読み込めていません（HTML に <script src="/…/pagefind/pagefind.js"> が無い）');
       return;
     }
 
     ensurePanel();
-    const panel  = document.getElementById('pf-panel');
-    const input  = document.getElementById('pf-input');
-    const list   = document.getElementById('pf-results');
 
-    // サブディレクトリでも正しく index を読む
+    // Pagefind エンジン作成
     const engine = await window.pagefind({ baseUrl: PF_BASE });
 
-    // 既存の虫眼鏡ボタン
+    // 既存の虫眼鏡アイコンに紐付け（PaperMod の .header-search a）
     const trigger = document.querySelector('.header-search a');
-    if (!trigger) return;
+    if (!trigger) { console.warn('⚠️ .header-search a が見つかりません'); return; }
 
-    // クリックでトグル（ヘッダーの位置は動かない）
     trigger.addEventListener('click', (e) => {
       e.preventDefault();
-      if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
-      placePanelBelowIcon(trigger, panel);
-      input.value = ''; list.innerHTML = '';
-      input.focus();
+      const p = document.getElementById('pf-panel');
+      if (p.style.display === 'block') { closePanel(); return; }
+      openPanel();
+      document.getElementById('pf-input').value = '';
+      document.getElementById('pf-results').innerHTML = '';
     });
 
-    // 外クリック/ESCで閉じる
+    // 外側クリック / Esc で閉じる
     document.addEventListener('click', (e)=>{
-      if (panel.style.display !== 'block') return;
-      if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) {
-        panel.style.display = 'none';
-      }
+      const p = document.getElementById('pf-panel');
+      if (p.style.display !== 'block') return;
+      if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) closePanel();
     });
-    document.addEventListener('keydown', (e)=>{
-      if (e.key === 'Escape' && panel.style.display === 'block') panel.style.display = 'none';
-    });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closePanel(); });
 
-    // 入力→検索（デバウンス付き）
-    let t;
+    // 入力 → 検索
+    let t; 
+    const input  = document.getElementById('pf-input');
+    const list   = document.getElementById('pf-results');
     input.addEventListener('input', ()=>{
       clearTimeout(t);
       t = setTimeout(async ()=>{
@@ -205,28 +93,16 @@
         if (!q) return;
 
         const res = await engine.search(q);
-        if (!res?.results?.length){
-          list.innerHTML = '<p>該当する結果はありません。</p>';
-          return;
-        }
+        if (!res?.results?.length){ list.innerHTML = '<p>該当する結果はありません。</p>'; return; }
         for (const r of res.results){
           const d = await r.data();
           const a = document.createElement('a');
-          a.href = d.url;
-          a.textContent = d.meta?.title || d.url;
+          a.href = d.url; a.textContent = d.meta?.title || d.url;
           list.appendChild(a);
         }
       }, 160);
     });
-  });
 
-  // 画面サイズ変更時も位置を追従
-  window.addEventListener('resize', ()=>{
-    const panel = document.getElementById('pf-panel');
-    const icon  = document.querySelector('.header-search a');
-    if (panel && panel.style.display === 'block' && icon) {
-      placePanelBelowIcon(icon, panel);
-    }
+    console.log('✅ Pagefind ready');
   });
 </script>
-<!-- ===== Pagefind ここまで ===== -->
