@@ -15,6 +15,23 @@
   #pf-results a:hover{ text-decoration:underline; }
 </style>
 
+<!-- PF-PROBE: pagefind.js の実URLとロード結果を必ず出す -->
+<script>
+  (function(){
+    const PF_SRC = new URL('pagefind/pagefind.js', document.baseURI).href;
+    console.log('[PF-PROBE] baseURI=', document.baseURI);
+    console.log('[PF-PROBE] PF_SRC  =', PF_SRC);
+    console.log('[PF-PROBE] BEFORE typeof window.pagefind =', typeof window.pagefind);
+
+    const s = document.createElement('script');
+    s.src = PF_SRC;
+    s.onload  = () => console.log('[PF-PROBE] onload typeof window.pagefind =', typeof window.pagefind);
+    s.onerror = (e) => console.error('[PF-PROBE] onerror loading:', PF_SRC, e);
+    document.head.appendChild(s);
+  })();
+</script>
+
+
 <script>
   // サブディレクトリでも正しく読むための base
   const PF_BASE = new URL(document.baseURI).pathname;
