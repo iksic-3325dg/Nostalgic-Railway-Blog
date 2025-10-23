@@ -1,11 +1,34 @@
-// /static/assets/js/search.js  （HTML から type="module" で読み込む）
-
-const BASE = '/Nostalgic-Railway-Blog/';                // 公開サブディレクトリ
+// ===== Pagefind ESM ローダー（形に依存しない） =====
+const BASE = '/Nostalgic-Railway-Blog/';
 const PAGEFIND_JS = new URL(`${BASE}pagefind/pagefind.js`, location.origin).href;
 
-// UI 要素（あなたのHTMLに合わせてクラス／IDを使う）
-const trigger = document.querySelector('.header-search a'); // 虫眼鏡リンク
-let panel, input, results, engine;
+async function loadPagefind() {
+  // 1) 本体パスの健全性チェック
+  const head = await fetch(PAGEFIND_JS, { method: 'HEAD' });
+  if (!head.ok) throw new Error(`pagefind.js not found: ${PAGEFIND_JS} (${head.status})`);
+
+  // 2) 動的 import（さまざまな形に対応）
+  const mod = await import(PAGEFIND_JS);
+
+  const cand = [
+    typeof mod === 'function' ? mod : null,
+    typeof mod?.default === 'function' ? mod.default : null,
+    typeof mod?.pagefind === 'function' ? mod.pagefind : null,
+    typeof mod?.default?.pagefind === 'function' ? mod.default.pagefind : null,
+    typeof mod?.init === 'function' ? mod.init : null,
+  ].find(Boolean);
+
+  if (!cand) {
+    console.error('Loaded pagefind module keys:', Object.keys(mod || {}));
+    throw new Error('Pagefind factory function not found in module');
+  }
+  // 3) エンジン生成（GitHub Pages のサブディレクトリに合わせる）
+  return await cand({ baseUrl: BASE });
+}
+// ================================================
+
+// 共有変数
+let trigger, panel, input, results, engine;
 
 // パネル生成（1回だけ）
 function ensurePanel(){
@@ -39,9 +62,11 @@ function closePanel(){
 }
 
 async function boot(){
-  // ESM 版 pagefind を動的 import
-  const { default: createPagefind } = await import(PAGEFIND_JS);
-  engine = await createPagefind({ baseUrl: BASE });
+  // ←←← ここを loadPagefind() に変更（唯一の変更点）
+  engine = await loadPagefind();
+
+  // 既存の虫眼鏡（PaperMod の右端アイコン）
+  trigger = document.querySelector('.header-search a');
 
   // トグル
   if (trigger){
@@ -85,7 +110,7 @@ async function boot(){
     }, 160);
   });
 
-  console.log('✅ Pagefind ready (ESM)');
+  console.log('✅ Pagefind ready (ESM, base=', BASE, ')');
 }
 
 boot().catch(err => console.error('❌ Pagefind 初期化エラー:', err));
