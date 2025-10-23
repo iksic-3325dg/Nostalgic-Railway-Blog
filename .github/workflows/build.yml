@@ -9,14 +9,18 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (with submodules)
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: true        # ← PaperMod を submodule で使う場合は必須
           fetch-depth: 0
 
       - name: Setup Hugo
@@ -30,14 +34,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install Pagefind
+        run: npm install -g pagefind
+
       - name: Build Hugo site
         run: hugo --minify
 
       - name: Run Pagefind
-        run: npx -y pagefind@latest --site "./public" --output-path "./public/pagefind"
+        run: pagefind --site "./public" --output-path "./public/pagefind"
 
       - name: Verify Pagefind output
-        run: ls -R ./public/pagefind || echo "⚠️ Pagefind not found"
+        run: ls -la ./public/pagefind && head -n 50 ./public/pagefind/pagefind.js || echo "⚠️ Pagefind not found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
