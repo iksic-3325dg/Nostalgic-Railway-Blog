@@ -1,0 +1,53 @@
+name: Build and Deploy with Pagefind
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true     # PaperMod を submodule で使っている場合は必須
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Hugo (public/)
+        run: |
+          hugo --minify
+          test -d public && echo "Hugo OK" || (echo "NO public dir" && exit 1)
+
+      - name: Run Pagefind (to public/pagefind)
+        run: |
+          npx -y pagefind --site "./public" --output-path "./public/pagefind"
+          ls -la public/pagefind || (echo "NO pagefind output" && exit 1)
+
+      - name: Add .nojekyll
+        run: echo > public/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          force_orphan: true
+
