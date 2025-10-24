@@ -37,10 +37,16 @@ jobs:
         run: hugo --minify
 
       - name: Run Pagefind
-        run: npx pagefind --site "./public" --output-path "./public/pagefind"
+        run: npx pagefind --site "./public" --output-path "./public/pagefind" --verbose
 
-      - name: Verify Pagefind output
-        run: ls -la ./public/pagefind && cat ./public/pagefind/manifest.json | head -c 200 || true
+      - name: Inspect Pagefind output (routes + count)
+        run: |
+          echo "---- manifest routes ----"
+          jq -r '.routes | to_entries[] | "\(.key) -> \(.value.title // "no-title")"' ./public/pagefind/manifest.json || cat ./public/pagefind/manifest.json
+          echo "---- total ----"
+          jq -r '.routes | length' ./public/pagefind/manifest.json || true
+            - name: Verify Pagefind output
+              run: ls -la ./public/pagefind && cat ./public/pagefind/manifest.json | head -c 200 || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
