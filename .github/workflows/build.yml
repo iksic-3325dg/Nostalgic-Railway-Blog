@@ -1,4 +1,4 @@
-name: Build and Deploy (Hugo + Pagefind)
+name: Build and Deploy with Pagefind
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -14,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
           fetch-depth: 0
 
       - name: Setup Hugo
@@ -28,17 +30,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Pagefind CLI
+      - name: Install Pagefind
         run: npm install -g pagefind
 
-      - name: Build Hugo site
+      - name: Build Hugo
         run: hugo --minify
 
-      - name: Run Pagefind (index into public/pagefind)
-        run: pagefind --site "./public" --output-path "./public/pagefind"
+      - name: Run Pagefind
+        run: npx pagefind --site "./public" --output-path "./public/pagefind"
 
       - name: Verify Pagefind output
-        run: ls -lah ./public/pagefind || exit 1
+        run: ls -la ./public/pagefind && cat ./public/pagefind/manifest.json | head -c 200 || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -46,4 +48,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           force_orphan: true
-
