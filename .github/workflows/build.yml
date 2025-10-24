@@ -16,8 +16,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true
           fetch-depth: 0
+          submodules: false
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -30,23 +30,29 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Pagefind
-        run: npm install -g pagefind
+      # まず Hugo ビルド（static 以下のHTMLも public にコピーされます）
+      - name: Build Hugo site
+        run: |
+          hugo --minify --gc --cleanDestinationDir
+          echo "---- public preview ----"
+          ls -la ./public | head -n 100
 
-      - name: Build Hugo
-        run: hugo --minify
+      # Pagefind を入れて index を生成
+      - name: Install Pagefind
+        run: npm i -g pagefind@latest
 
       - name: Run Pagefind
-        run: npx pagefind --site "./public" --output-path "./public/pagefind" --verbose
+        run: |
+          pagefind --site "./public" --output-path "./public/pagefind" --force-language ja --verbose
+          test -f ./public/pagefind/manifest.json
 
+      # ここでルート一覧を必ず出力（デバッグ用）
       - name: Inspect Pagefind output (routes + count)
         run: |
-          echo "---- manifest routes ----"
-          jq -r '.routes | to_entries[] | "\(.key) -> \(.value.title // "no-title")"' ./public/pagefind/manifest.json || cat ./public/pagefind/manifest.json
-          echo "---- total ----"
-          jq -r '.routes | length' ./public/pagefind/manifest.json || true
-            - name: Verify Pagefind output
-              run: ls -la ./public/pagefind && cat ./public/pagefind/manifest.json | head -c 200 || true
+          echo "---- pagefind dir ----"
+          ls -la ./public/pagefind
+          echo "---- manifest head ----"
+          head -c 400 ./public/pagefind/manifest.json || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
