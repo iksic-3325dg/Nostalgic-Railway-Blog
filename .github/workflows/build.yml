@@ -49,12 +49,23 @@ jobs:
         run: |
           echo "---- pagefind dir ----"
           ls -la ./public/pagefind || true
-          if [ ! -f ./public/pagefind/manifest.json ]; then
-            echo "::error::manifest.json not found. Pagefind produced no index."
-            exit 1
+
+          # v0 系: manifest.json がある場合
+          if [ -f ./public/pagefind/manifest.json ]; then
+            echo "manifest.json found (v0 layout)"
+            head -c 300 ./public/pagefind/manifest.json || true
+            exit 0
           fi
-          echo "---- manifest head ----"
-          head -c 300 ./public/pagefind/manifest.json || true
+
+          # v1 系: manifest.json は無い。新レイアウトを確認
+          if [ -f ./public/pagefind/pagefind-entry.json ] && [ -d ./public/pagefind/index ]; then
+            echo "v1 layout detected (pagefind-entry.json + index/ OK)"
+            exit 0
+          fi
+
+          echo "::error::Pagefind output not recognized. index/ or pagefind-entry.json missing."
+          exit 1
+
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
