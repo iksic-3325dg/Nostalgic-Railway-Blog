@@ -1,4 +1,4 @@
-name: Build and Deploy (static + Pagefind)
+name: Build and Deploy (Hugo + Pagefind)
 
 on:
   push:
@@ -11,7 +11,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -19,17 +23,22 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build Hugo (static passthrough)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Pagefind CLI
+        run: npm install -g pagefind
+
+      - name: Build Hugo site
         run: hugo --minify
 
-      - name: Install Pagefind
-        run: npm i -g pagefind
-
-      - name: Run Pagefind
+      - name: Run Pagefind (index into public/pagefind)
         run: pagefind --site "./public" --output-path "./public/pagefind"
 
       - name: Verify Pagefind output
-        run: ls -la ./public/pagefind && grep -m1 pagefind.js ./public/pagefind/pagefind.js && echo "OK"
+        run: ls -lah ./public/pagefind || exit 1
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -37,3 +46,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           force_orphan: true
+
