@@ -4,12 +4,21 @@ const BASE   = new URL(document.baseURI).pathname;                 // 例: "/Nos
 const PF_SRC = new URL('pagefind/pagefind.js', document.baseURI).href;
 
 async function createEngine() {
-  // すでに IIFE 版が window に居る？
+  // 1) すでに IIFE 版が window に居る？
   if (typeof window.pagefind === 'function') {
     return await window.pagefind({ baseUrl: BASE });
   }
-  // ESM を動的 import（default or named を吸収）
+
+  // 2) ESM を import（v1 形式に対応）
   const mod = await import(PF_SRC);
+
+  // v1：名前付きエクスポート { init, search }
+  if (typeof mod?.init === 'function' && typeof mod?.search === 'function') {
+    await mod.init({ baseUrl: BASE });               // インデックス読込
+    return { search: mod.search };                    // 使い勝手を既存に合わせる
+  }
+
+  // 旧来：default or named pagefind(factory)
   const factory =
     typeof mod?.default  === 'function' ? mod.default  :
     typeof mod?.pagefind === 'function' ? mod.pagefind : null;
@@ -20,6 +29,7 @@ async function createEngine() {
   }
   return await factory({ baseUrl: BASE });
 }
+
 
 // ---- フローティングUI（ヘッダーを崩さない）----
 let panel, input, results, engine;
