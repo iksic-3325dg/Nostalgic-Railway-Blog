@@ -1,18 +1,11 @@
-// ===== 設定 =====
-const BASE = '/Nostalgic-Railway-Blog/';
-const PAGEFIND_JS = new URL(`${BASE}pagefind/pagefind.js`, location.origin).href;
+// ---- Pagefind (グローバル関数版) 安定ローダー ----
+const BASE = '/Nostalgic-Railway-Blog/';   // サブディレクトリ公開のベース
 
-// ===== 状態変数 =====
-let panel, input, results, trigger, engine;
+let engine = null;
+let panel = null, input = null, results = null;
 
-// ===== パネル生成（1回だけ） =====
 function ensurePanel() {
-  if (document.getElementById('pf-panel')) {
-    panel   = document.getElementById('pf-panel');
-    input   = document.getElementById('pf-input');
-    results = document.getElementById('pf-results');
-    return;
-  }
+  if (panel) return;
   panel = document.createElement('div');
   panel.id = 'pf-panel';
   panel.style.cssText = `
@@ -22,7 +15,8 @@ function ensurePanel() {
     padding:12px; display:none;
   `;
   panel.innerHTML = `
-    <input id="pf-input" type="text" placeholder="サイト内検索…" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:8px;outline:none;">
+    <input id="pf-input" type="text" placeholder="サイト内検索…" 
+           style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:8px;outline:none;">
     <div id="pf-results" style="margin-top:10px;max-height:60vh;overflow:auto;"></div>
   `;
   document.body.appendChild(panel);
@@ -30,7 +24,6 @@ function ensurePanel() {
   results = document.getElementById('pf-results');
 }
 
-// ===== 開閉 =====
 function openPanel() {
   ensurePanel();
   panel.style.display = 'block';
@@ -42,83 +35,79 @@ function closePanel() {
   if (panel) panel.style.display = 'none';
 }
 
-// ===== Pagefind を ESM として動的 import =====
-async function loadPagefind() {
-  // 404/パス間違いの早期検出
-  const head = await fetch(PAGEFIND_JS, { method: 'HEAD' });
-  if (!head.ok) throw new Error(`pagefind.js not found: ${PAGEFIND_JS} (${head.status})`);
-
-  const mod = await import(PAGEFIND_JS);
-
-  // どのキーにファクトリが居ても拾う
-  const create =
-    (typeof mod === 'function' && mod) ||
-    (typeof mod?.default === 'function' && mod.default) ||
-    (typeof mod?.pagefind === 'function' && mod.pagefind) ||
-    (typeof mod?.default?.pagefind === 'function' && mod.default.pagefind) ||
-    (typeof mod?.init === 'function' && mod.init);
-
-  if (!create) throw new Error('Pagefind factory function not found in module');
-
-  return await create({ baseUrl: BASE });
+// window.pagefind が出現するまで待つ（最大 10 秒）
+function waitForPagefind(timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    const t0 = Date.now();
+    (function tick() {
+      if (typeof window.pagefind === 'function') return resolve(window.pagefind);
+      if (Date.now() - t0 > timeoutMs) return reject(new Error('pagefind.js not loaded'));
+      setTimeout(tick, 100);
+    })();
+  });
 }
 
-// ===== 起動 =====
 async function boot() {
-  // 1) UI要素を必ず作ってから参照
-  ensurePanel();
+  // 1) pagefind 本体の出現待ち
+  const create = await waitForPagefind();
 
-  // 2) 既存の虫眼鏡（PaperModのヘッダー）
-  trigger = document.querySelector('.header-search a');
-  if (!trigger) {
-    console.warn('⚠️ .header-search a が見つかりません');
-    return; // ここで終了（ヘッダーが無いページ）
+  // 2) エンジン作成（public/pagefind のインデックスを読む）
+  engine = await create({ baseUrl: BASE });
+  console.log('✅ Pagefind ready');
+
+  // 3) UI の紐付け（虫眼鏡）
+  const trigger = document.querySelector('.header-search a');
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (panel && panel.style.display === 'block') closePanel();
+      else openPanel();
+    });
   }
 
-  // 3) Pagefind 読み込み
-  engine = await loadPagefind();
-
-  // 4) トグル
-  trigger.addEventListener('click', (e) => {
-    e.preventDefault();
-    (panel && panel.style.display === 'block') ? closePanel() : openPanel();
-  });
-
-  // 5) 外側クリック / Esc
+  // 4) 外側クリック / Esc で閉じる
   document.addEventListener('click', (e) => {
-    if (panel?.style.display !== 'block') return;
+    if (!panel || panel.style.display !== 'block') return;
     if (!e.target.closest('#pf-panel') && !e.target.closest('.header-search')) closePanel();
   });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePanel();
+  });
 
-  // 6) 入力→検索（デバウンス）
-  let t;
+  // 5) 入力→検索（デバウンス）
+  let timer;
   input.addEventListener('input', () => {
-    clearTimeout(t);
-    t = setTimeout(async () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
       const q = input.value.trim();
       results.innerHTML = '';
-      if (!q) return;
+      if (!q || !engine) return;
 
-      const r = await engine.search(q);
-      if (!r?.results?.length) {
-        results.innerHTML = '<p>該当する結果はありません。</p>';
-        return;
-      }
-      for (const hit of r.results) {
-        const d = await hit.data();
-        const a = document.createElement('a');
-        a.href = d.url;
-        a.textContent = d.meta?.title || d.url;
-        a.style.cssText = 'display:block;padding:6px 0;color:#333;text-decoration:none;';
-        a.onmouseenter = () => a.style.textDecoration = 'underline';
-        a.onmouseleave = () => a.style.textDecoration = 'none';
-        results.appendChild(a);
+      try {
+        const res = await engine.search(q);
+        if (!res?.results?.length) {
+          results.innerHTML = '<p>該当する結果はありません。</p>';
+          return;
+        }
+        for (const r of res.results) {
+          const d = await r.data();
+          const a = document.createElement('a');
+          a.href = d.url;
+          a.textContent = d.meta?.title || d.url;
+          a.style.cssText = 'display:block;padding:6px 0;color:#333;text-decoration:none;';
+          a.onmouseenter = () => (a.style.textDecoration = 'underline');
+          a.onmouseleave = () => (a.style.textDecoration = 'none');
+          results.appendChild(a);
+        }
+      } catch (err) {
+        console.error('検索エラー:', err);
       }
     }, 160);
   });
-
-  console.log('✅ Pagefind ready');
 }
 
-boot().catch(err => console.error('❌ Pagefind 初期化エラー:', err));
+// DOM 準備後に起動
+window.addEventListener('DOMContentLoaded', () => {
+  try { boot().catch(err => console.error('Pagefind 初期化エラー:', err)); }
+  catch (e) { console.error('Pagefind 初期化エラー:', e); }
+});
