@@ -6,18 +6,14 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: false
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -30,29 +26,35 @@ jobs:
         with:
           node-version: 20
 
-      # まず Hugo ビルド（static 以下のHTMLも public にコピーされます）
+      # （任意）Pagefind を毎回最新で実行したいので npx を使います
+      # すでに global install 済みでも動きます
       - name: Build Hugo site
-        run: |
-          hugo --minify --gc --cleanDestinationDir
-          echo "---- public preview ----"
-          ls -la ./public | head -n 100
+        run: hugo --minify
 
-      # Pagefind を入れて index を生成
-      - name: Install Pagefind
-        run: npm i -g pagefind@latest
+      # public に本当に HTML があるかを可視化（重要な切り分け）
+      - name: List built HTML
+        run: |
+          echo "---- built html ----"
+          find ./public -type f -name '*.html' -print || true
 
       - name: Run Pagefind
         run: |
-          pagefind --site "./public" --output-path "./public/pagefind" --force-language ja --verbose
-          test -f ./public/pagefind/manifest.json
+          npx --yes pagefind@1 \
+            --site "./public" \
+            --output-path "./public/pagefind" \
+            --force-language ja \
+            --verbose
 
-      # ここでルート一覧を必ず出力（デバッグ用）
-      - name: Inspect Pagefind output (routes + count)
+      - name: Verify Pagefind output
         run: |
           echo "---- pagefind dir ----"
-          ls -la ./public/pagefind
+          ls -la ./public/pagefind || true
+          if [ ! -f ./public/pagefind/manifest.json ]; then
+            echo "::error::manifest.json not found. Pagefind produced no index."
+            exit 1
+          fi
           echo "---- manifest head ----"
-          head -c 400 ./public/pagefind/manifest.json || true
+          head -c 300 ./public/pagefind/manifest.json || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
