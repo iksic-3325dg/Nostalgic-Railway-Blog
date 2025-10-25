@@ -1,9 +1,22 @@
 baseURL = "https://iksic-3325dg.github.io/Nostalgic-Railway-Blog/"
 languageCode = "ja"
 title = "Nostalgic Railway Blog"
+theme = "PaperMod"
+enableRobotsTXT = true
+canonifyURLs = true
 
 # テーマに依存しない完全静的を優先。PaperModの指定は残っててもOKだが不要。
 theme = ""
 
 # 重要: 余計なURL正規化を避ける
 canonifyURLs = false
+
+[params]
+  env = "production"
+  description = "懐かしい鉄道車両を撮影する旅"
+  # ほか既存の設定は任意で
+
+# （任意）サイトマップの微調整
+[sitemap]
+  changefreq = "weekly"
+  priority   = 0.5
