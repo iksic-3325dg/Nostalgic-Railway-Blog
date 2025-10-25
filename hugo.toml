@@ -5,9 +5,6 @@ theme = "PaperMod"
 enableRobotsTXT = true
 canonifyURLs = true
 
-# 重要: 余計なURL正規化を避ける
-canonifyURLs = false
-
 [params]
   env = "production"
   description = "懐かしい鉄道車両を撮影する旅"
