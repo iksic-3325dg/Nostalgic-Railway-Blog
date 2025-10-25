@@ -5,9 +5,6 @@ theme = "PaperMod"
 enableRobotsTXT = true
 canonifyURLs = true
 
-# テーマに依存しない完全静的を優先。PaperModの指定は残っててもOKだが不要。
-theme = ""
-
 # 重要: 余計なURL正規化を避ける
 canonifyURLs = false
 
