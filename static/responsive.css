@@ -5,6 +5,7 @@
     
     .main-wrapper {
         font-family: 'YuGothic';
+        margin-top: 120px;
     }
 
     .heading {
@@ -75,7 +76,6 @@
         line-height: 60px;
         text-align: center;
         width: 25%;
-        padding: 10px 0;
         font-size: 20px;
         color: white;
         display: block;
