@@ -1,6 +1,6 @@
 @media(max-width: 1050px) {
     .top-wrapper {
-        padding: 70px 0 10px 0;
+        display: none;
     }
     
     .main-wrapper {
@@ -50,31 +50,49 @@
     }
 
     header {
-        height: 60px;
+        height: 120px;
     }
 
     .header-left {
+        margin-left: 0;
         line-height: 60px;
     }
-    
+
     .header-left h3 {
-        color: white;
         font-size: 25px;
+    }
+
+    .header-search {
+        margin-right: 10px;
     }
 
     .header-search a {
         line-height: 60px;
-        margin-left: 5px;
+        height: 60px;
     }
-
+    
     .fa-solid {
         line-height: 60px;
     }
     
+    .header-right {
+        float: right;
+        width: 100%;
+        margin-right: 0;
+        background-color: rgba(34,49,52,0.8);
+    }
+
     .header-right a{
         line-height: 60px;
         font-size: 20px;
-        padding: 0 10px;
+        text-align: center;
+        width: 25%;
+        padding: 10px 0;
+        font-size: 14px;
+        color: white;
+        display: block;
+        float: left;
+        transition: all 0.5s;
     }
 
     .commercial-wrapper {
@@ -93,9 +111,6 @@
 
 
 @media(max-width: 670px) {
-    .top-wrapper {
-        display: none;
-    }
 
     .btn {
         padding: 10px 0;
