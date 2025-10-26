@@ -1,5 +1,5 @@
 // static/assets/js/cards.js
-const JSON_URL = new URL('/Nostalgic-Railway-Blog/assets/posts.json', location.origin).href;
+const JSON_URL = new URL('/Nostalgic-Railway-Blog/assets/js/posts.json', location.origin).href;
 
 function cardTemplate(post){
   return `
