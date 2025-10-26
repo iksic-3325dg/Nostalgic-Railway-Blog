@@ -43,6 +43,48 @@ function mountStylesOnce(){
   document.head.appendChild(style);
 }
 
+// 既存：posts.json を fetch → 最新3件抽出まではそのままでOK
+
+function renderCards(posts) {
+  const root = document.querySelector('#cards-root'); // ページ側の描画先
+  if (!root) return;
+
+  // セクション（見出し＋カード行）を作る
+  const section = document.createElement('section');
+  section.className = 'cards-section';
+
+  const h3 = document.createElement('h3');
+  h3.className = 'cards-title';
+  h3.textContent = '新着記事をピックアップ';
+
+  const row = document.createElement('div');
+  row.className = 'cards-row';
+
+  // カードを3件分追加（posts は新しい順にソート済み想定）
+  posts.slice(0, 3).forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <a href="${p.url}">
+        <img src="${p.image}" alt="${p.title}">
+        <div class="meta">
+          <div class="title">${p.title}</div>
+          <div class="date">${p.date}</div>
+        </div>
+      </a>
+    `;
+    row.appendChild(card);
+  });
+
+  section.appendChild(h3);
+  section.appendChild(row);
+  root.replaceChildren(section);  // 置き換え
+}
+
+// 例：fetch 後に呼ぶ
+// renderCards(posts);
+
 async function boot(){
   const holders = document.querySelectorAll('[data-card-grid]');
   if (!holders.length) return;
