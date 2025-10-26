@@ -85,6 +85,7 @@
 
     .header-right a{
         line-height: 60px;
+        padding: 0;
         font-size: 20px;
         text-align: center;
         width: 25%;
