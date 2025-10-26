@@ -1,3 +1,6 @@
+/* debug */
+body { outline: 3px solid #f0f; }
+
 /* セクション全体 */
 .cards-section {
   margin: 24px 0;
