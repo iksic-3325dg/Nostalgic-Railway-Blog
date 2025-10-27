@@ -232,3 +232,11 @@ footer {
   background-color: #f0f0f0;
 }
 
+.pickup-heading {
+    height: 60px;
+    margin-left: 25px;
+}
+
+.pickup-heading h3 {
+    font-size: 25px;
+}

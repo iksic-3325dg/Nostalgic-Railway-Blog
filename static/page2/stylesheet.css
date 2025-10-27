@@ -259,3 +259,12 @@ footer {
     bottom: 15px;
     left: 4%;
 }
+
+.pickup-heading {
+    height: 60px;
+    margin-left: 25px;
+}
+
+.pickup-heading h3 {
+    font-size: 25px;
+}

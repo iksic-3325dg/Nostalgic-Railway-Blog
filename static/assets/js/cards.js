@@ -1,118 +1,56 @@
-// static/assets/js/cards.js
-const JSON_URL = new URL('/Nostalgic-Railway-Blog/assets/js/posts.json', location.origin).href;
+// モジュールで読み込む想定：<script type="module" src="/.../assets/js/cards.js"></script>
 
-function cardTemplate(post){
-  return `
-    <a class="card" href="${post.url}">
-      <div class="card-thumb">
-        <img loading="lazy" src="${post.image}" alt="${post.title}">
-      </div>
-      <div class="card-body">
-        <h3 class="card-title">${post.title}</h3>
-      </div>
-    </a>
-  `;
+const BASE = new URL(document.baseURI);                   // base要素を尊重
+const POSTS_URL = new URL('assets/js/posts.json', BASE).href;
+
+async function loadPosts() {
+  const res = await fetch(POSTS_URL, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`posts.json fetch error ${res.status}`);
+  return await res.json();
 }
 
-function mountStylesOnce(){
-  if (document.getElementById('card-grid-style')) return;
-  const css = `
-  .card-grid{
-    display:grid; gap:16px;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-  }
-  @media (max-width: 1024px){
-    .card-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 640px){
-    .card-grid{ grid-template-columns:1fr; }
-  }
-  .card{
-    display:block; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;
-    background:#fff; text-decoration:none; color:#111; transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .card:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,.08); }
-  .card-thumb{ position:relative; aspect-ratio: 16 / 9; background:#f3f4f6; overflow:hidden; }
-  .card-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .card-body{ padding:10px 12px; }
-  .card-title{ font-size:16px; line-height:1.5; margin:0; font-weight:600; }
-  `;
-  const style = document.createElement('style');
-  style.id = 'card-grid-style';
-  style.textContent = css;
-  document.head.appendChild(style);
+function buildCard(post) {
+  const a = document.createElement('a');
+  a.className = 'card';
+  a.href = post.url;                                     // posts.jsonは絶対/相対どちらでもOK
+
+  const th = document.createElement('div');
+  th.className = 'card-thumb';
+  const img = document.createElement('img');
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.src = post.image;
+  img.alt = post.title || '';
+  th.appendChild(img);
+
+  const body = document.createElement('div');
+  body.className = 'card-body';
+  const h = document.createElement('p');
+  h.className = 'card-title';
+  h.textContent = post.title || '';
+  const d = document.createElement('p');
+  d.className = 'card-date';
+  if (post.date) d.textContent = post.date;
+
+  body.append(h, d);
+  a.append(th, body);
+  return a;
 }
 
-// 既存：posts.json を fetch → 最新3件抽出まではそのままでOK
+async function mountGrids(){
+  const posts = await loadPosts();
+  document.querySelectorAll('[data-card-grid]').forEach(gridHost => {
+    // コンテナ生成
+    const grid = document.createElement('div');
+    grid.className = 'card-grid';
+    gridHost.replaceWith(grid);
 
-function renderCards(posts) {
-  const root = document.querySelector('#cards-root'); // ページ側の描画先
-  if (!root) return;
+    // 表示件数（未指定なら3）
+    const n = Number(gridHost.getAttribute('data-count') || 3);
 
-  // セクション（見出し＋カード行）を作る
-  const section = document.createElement('section');
-  section.className = 'cards-section';
-
-  const h3 = document.createElement('h3');
-  h3.className = 'cards-title';
-  h3.textContent = '新着記事をピックアップ';
-
-  const row = document.createElement('div');
-  row.className = 'cards-row';
-
-  // カードを3件分追加（posts は新しい順にソート済み想定）
-  posts.slice(0, 3).forEach(p => {
-    const card = document.createElement('article');
-    card.className = 'card';
-
-    card.innerHTML = `
-      <a href="${p.url}">
-        <img src="${p.image}" alt="${p.title}">
-        <div class="meta">
-          <div class="title">${p.title}</div>
-          <div class="date">${p.date}</div>
-        </div>
-      </a>
-    `;
-    row.appendChild(card);
-  });
-
-  section.appendChild(h3);
-  section.appendChild(row);
-  root.replaceChildren(section);  // 置き換え
-}
-
-// 例：fetch 後に呼ぶ
-// renderCards(posts);
-
-async function boot(){
-  const holders = document.querySelectorAll('[data-card-grid]');
-  if (!holders.length) return;
-
-  mountStylesOnce();
-
-  // JSON取得
-  const res = await fetch(JSON_URL, { cache: 'no-store' });
-  if (!res.ok) { console.error('cards: JSON fetch error', res.status); return; }
-  const posts = await res.json();
-
-  // date降順でソート
-  posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
-
-  holders.forEach(holder=>{
-    const count = parseInt(holder.dataset.count || '3', 10);
-    const list = posts.slice(0, Math.max(1, count));
-    holder.innerHTML = `
-      <div class="card-grid">
-        ${list.map(cardTemplate).join('')}
-      </div>
-    `;
+    // 新しい順で上から n 件
+    posts.slice(0, n).forEach(p => grid.appendChild(buildCard(p)));
   });
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot);
-} else {
-  boot();
-}
-
+mountGrids().catch(err => console.error('cards:', err));
