@@ -4,6 +4,7 @@ title = "Nostalgic Railway Blog"
 theme = "PaperMod"
 enableRobotsTXT = true
 canonifyURLs = true
+relativeURLs = false
 
 [params]
   env = "production"
