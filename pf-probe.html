@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>PF Probe</title>
+<body>
+<h1>Pagefind Probe</h1>
+<pre id="out">loading…</pre>
+<script>
+(async () => {
+  const out = (msg) => document.getElementById('out').textContent += msg + '\n';
+
+  const url = new URL('pagefind/pagefind.js', document.baseURI).href;
+  out('baseURI: ' + document.baseURI);
+  out('trying:  ' + url);
+
+  await new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload  = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  }).catch(e => { out('onerror: ' + e); });
+
+  out('typeof window.pagefind: ' + (typeof window.pagefind));
+
+  if (typeof window.pagefind === 'function') {
+    const engine = await window.pagefind({ baseUrl: new URL(document.baseURI).pathname });
+    out('engine ok. try query "test"…');
+    const res = await engine.search('test');
+    out('results length: ' + (res?.results?.length ?? 'null'));
+  } else {
+    out('NO ENGINE (pagefind.js not loaded or wrong file).');
+  }
+})();
+</script>
+</body>

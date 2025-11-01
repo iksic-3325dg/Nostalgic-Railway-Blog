@@ -1,0 +1,232 @@
+@media(max-width: 1050px) {
+    .top-wrapper {
+        padding: 70px 0 10px 0;
+    }
+    
+    .main-wrapper {
+        font-family: 'YuGothic';
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .heading h1 {
+        font-size: 35px;
+    }
+
+    .main-contents {
+        height: auto;
+        color: black;
+        text-align: left;
+        background-color: #f7f7f7;
+    }
+
+    .main-img {
+        display: none;
+    }
+    
+    .sub-img {
+        display: block;
+    }
+    
+    img {
+        object-fit: cover;
+        max-width: 100%;
+    }
+
+    .main-contents p {
+        font-size: 20px;
+        line-height: 50px;
+        font-weight: bold;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .tagbox {
+        margin-right: 0;
+    }
+    
+    .postdate {
+        padding-right: 0;
+    }
+
+    header {
+        height: 60px;
+    }
+
+    .header-left {
+        line-height: 60px;
+    }
+
+    .header-left h3 {
+        color: white;
+        font-size: 25px;
+    }
+
+    .header-search a {
+        line-height: 60px;
+        margin-left: 5px;
+    }
+
+    .fa-solid {
+        line-height: 60px;
+    }
+
+    .header-right a{
+        line-height: 60px;
+        font-size: 20px;
+        padding: 0 10px;
+    }
+
+    .commercial-wrapper {
+        padding: 15px 0;
+        font-size: 25px;
+    }
+
+    .attention-wrapper p {
+        padding-bottom: 10px;
+    }
+    
+    .X {
+        font-size: 20px;
+    }
+}
+
+
+@media(max-width: 670px) {
+    .top-wrapper {
+        display: none;
+    }
+
+    .btn {
+        padding: 10px 0;
+        width: 100%
+    }
+
+    .new {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .past {
+        margin-right: 0;
+    }
+
+    header {
+        height: 90px;
+    }
+
+    .header-left {
+        padding: 12.5px 0 12.5px 20px;
+        margin-left: 0;
+        line-height: 20px;
+    }
+
+    .header-left h3 {
+        font-size: 20px;
+    }
+
+    .header-search {
+        margin-right: 10px;
+    }
+
+    .header-search a {
+        line-height: 45px;
+        height: 45px;
+    }
+
+    .fa-solid {
+        line-height: 45px;
+    }
+
+    .header-right {
+        float: right;
+        width: 100%;
+        margin-right: 0;
+        background-color: rgba(34,49,52,0.8);
+    }
+
+    .header-right a{
+        line-height: 25px;
+        text-align: center;
+        width: 25%;
+        padding: 10px 0;
+        font-size: 14px;
+        color: white;
+        display: block;
+        float: left;
+        transition: all 0.5s;
+    }
+
+    .main-wrapper {
+        margin-top: 90px;
+    }
+
+    .heading {
+        padding: 10px 0;
+    }
+
+    .heading h1 {
+        font-size: 20px;
+    }
+
+    .main-contents {
+        padding-bottom: 0;
+    }
+
+    .tagbox {
+        font-size: 15px;
+        padding: 0px 10px;
+    }
+        
+    .postdate {
+        font-size: 15px;
+        line-height: 30px;
+    }
+    
+    .main-contents p {
+        font-size: 15px;
+        line-height: 30px;
+        padding: 0x;
+        font-weight: bold;
+    }
+
+    .bottom-space {
+        margin-bottom: 30px;
+    }
+
+    .commercial-wrapper {
+        padding: 30px 15px 30px 15px;
+        font-size: 20px;
+    }
+
+    .attention-wrapper h4 {
+        font-size: 17px;
+        letter-spacing: 5px;
+    }
+
+    .attention-wrapper p {
+        font-size: 18px;
+        letter-spacing: 5px;
+    }
+
+    .footer-right {
+        padding: 0 15px;
+        margin-right: 0;
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .X {
+        padding: 10px 24px;
+        width: 100%;
+    }
+
+    .footer-left {
+        position: absolute;
+        font-size: 14px;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+}
